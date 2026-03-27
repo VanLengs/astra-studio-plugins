@@ -1,6 +1,6 @@
 ---
 name: spec-generate
-description: Generate all plugin specification files from planning artifacts — SKILL.md skeletons, plugin.json.draft, brief.md, and commands. Use after skill-design when the skill map is ready and you want to produce the complete workspace for skill authoring. Pure automation, no interactive input needed.
+description: Generate all plugin specification files from planning artifacts — SKILL.md skeletons, plugin.json.draft, brief.md, and commands. Use after skill-design when the skill map is ready and you want to produce the complete workspace that skill-creator can consume. Pure automation, no interactive input needed.
 allowed-tools: Read, Write, Glob, Grep
 user-invocable: true
 ---
@@ -72,7 +72,7 @@ For each skill in `skill-map.md`, create:
 studio/changes/{plugin-name}/skills/{skill-name}/SKILL.md
 ```
 
-Skeleton content — designed for a skill authoring tool to flesh out:
+Skeleton content — designed for the official `/skill-creator` to flesh out:
 
 ```markdown
 ---
@@ -110,7 +110,7 @@ user-invocable: true
 - {From skill-map.md out-of-scope list}
 ```
 
-If a SKILL.md already exists at that path, **do not overwrite** — the user may have already started working on it. Print a warning instead.
+If a SKILL.md already exists at that path, **do not overwrite** — the user or skill-creator may have already started working on it. Print a warning instead.
 
 If the skill is classified as **Moderate** or above, also create the `scripts/` directory:
 
@@ -185,7 +185,7 @@ Generated:
 Status: planning → building
 
 Next steps:
-  Flesh out each skill skeleton using your preferred skill authoring tool
+  Use /skill-creator to flesh out each skill skeleton
   Run /studio-quality:wire-mcp {plugin-name} if MCP servers are needed
   Run /studio-quality:validate {plugin-name} when all skills are ready
 ```
