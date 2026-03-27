@@ -20,9 +20,9 @@ Run a structured brainstorming session with multiple perspectives — product ma
 
 1. **Set the stage** — understand the domain and assemble roles
 2. **Discover events** — what happens in the business?
-3. **Build personas** — invoke `persona-insight` skill for each user type
-4. **Map user journeys** — invoke `journey-map` skill for each persona
-5. **Model processes** — invoke `process-flow` skill for each major process
+3. **Build personas** — invoke `studio-insight:persona-insight` for each user type
+4. **Map user journeys** — invoke `studio-insight:journey-map` for each persona
+5. **Model processes** — invoke `studio-insight:process-flow` for each major process
 6. **Identify hotspots** — synthesize all artifacts to find opportunities
 7. **Write output** — save event storm results to studio/changes/
 
@@ -60,7 +60,7 @@ Collect all events and **deduplicate** — different roles may describe the same
 
 ## Step 3: Build Personas
 
-Invoke the **persona-insight** skill for each user type identified in the events. Pass:
+Invoke the **studio-insight:persona-insight** skill for each user type identified in the events. Pass:
 - The domain context from Step 1
 - The user segments discovered in Step 2
 - The workspace path for output
@@ -71,7 +71,7 @@ Present personas to the user for validation before proceeding.
 
 ## Step 4: Map User Journeys
 
-Invoke the **journey-map** skill for each persona's primary scenario. Pass:
+Invoke the **studio-insight:journey-map** skill for each persona's primary scenario. Pass:
 - The persona card from Step 3
 - The events from Step 2
 - The workspace path for output
@@ -82,7 +82,7 @@ Present journey maps to the user. Ask: "Does this match your experience? What's 
 
 ## Step 5: Model Processes
 
-Invoke the **process-flow** skill for each major business process identified. Pass:
+Invoke the **studio-insight:process-flow** skill for each major business process identified. Pass:
 - The events from Step 2
 - The actors from persona cards
 - The workspace path for output

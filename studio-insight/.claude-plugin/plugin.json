@@ -1,0 +1,13 @@
+{
+  "name": "studio-insight",
+  "version": "0.1.0",
+  "description": "Business analysis toolkit — user personas, journey maps, process flows, domain modeling, behavior matrices, and opportunity assessment. Use for design research, domain analysis, or any scenario where you need structured business insight artifacts.",
+  "author": {
+    "name": "VanLengs",
+    "url": "https://github.com/VanLengs"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["persona", "journey-map", "process-flow", "domain-modeling", "business-analysis"],
+  "skills": "./skills/",
+  "commands": "./commands/"
+}

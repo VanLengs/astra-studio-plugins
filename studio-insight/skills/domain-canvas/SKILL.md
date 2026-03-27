@@ -10,7 +10,6 @@ user-invocable: true
 Produce a domain canvas — a visual map of business domains, their roles, boundaries, and interactions. Helps decide what deserves a custom plugin (core), what's supporting, and what can use off-the-shelf tools.
 
 Read `${CLAUDE_SKILL_DIR}/../../agents/architect.md` for the architect perspective on boundaries and dependencies.
-Read `${CLAUDE_SKILL_DIR}/../../references/plugin-architecture-guide.md` for plugin collection patterns.
 
 ## Inputs
 

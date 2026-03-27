@@ -21,10 +21,10 @@ Consult `${CLAUDE_SKILL_DIR}/../../references/plugin-architecture-guide.md` for 
 ## Workflow
 
 1. **Cluster events** — group related events into business domains
-2. **Build domain canvas** — invoke `domain-canvas` skill to define boundaries, classify, and map relationships
-3. **Build behavior matrix** — invoke `behavior-matrix` skill to cross-reference actors, actions, events, and data
+2. **Build domain canvas** — invoke `studio-insight:domain-canvas` to define boundaries, classify, and map relationships
+3. **Build behavior matrix** — invoke `studio-insight:behavior-matrix` to cross-reference actors, actions, events, and data
 4. **Propose plugins** — translate domains into plugin candidates
-5. **Assess opportunities** — invoke `opportunity-brief` skill to prioritize
+5. **Assess opportunities** — invoke `studio-insight:opportunity-brief` to prioritize
 6. **Write output** — save domain map to the workspace
 
 ## Step 1: Cluster Events
@@ -41,7 +41,7 @@ Present the clusters to the user: "I see these natural groupings — does this m
 
 ## Step 2: Build Domain Canvas
 
-Invoke the **domain-canvas** skill with the domain workspace path. Pass:
+Invoke the **studio-insight:domain-canvas** skill with the domain workspace path. Pass:
 - The event clusters from Step 1
 - The workspace path for output
 
@@ -55,7 +55,7 @@ Present the domain canvas to the user for validation before proceeding.
 
 ## Step 3: Build Behavior Matrix
 
-Invoke the **behavior-matrix** skill with the domain workspace path. Pass:
+Invoke the **studio-insight:behavior-matrix** skill with the domain workspace path. Pass:
 - The events, personas, and processes from event-storm artifacts
 - The workspace path for output
 
@@ -87,7 +87,7 @@ Present to the user for validation. This is a key decision point — the user sh
 
 ## Step 5: Assess Opportunities
 
-Invoke the **opportunity-brief** skill with the domain workspace path. Pass:
+Invoke the **studio-insight:opportunity-brief** skill with the domain workspace path. Pass:
 - All prior artifacts (event-storm, personas, journeys, domain-canvas, behavior-matrix)
 - The plugin candidates from Step 4
 

@@ -12,9 +12,14 @@
       "description": "Studio workspace management — init, promote, status"
     },
     {
+      "name": "studio-insight",
+      "source": "./studio-insight",
+      "description": "Business analysis toolkit — personas, journey maps, process flows, domain modeling"
+    },
+    {
       "name": "studio-planner",
       "source": "./studio-planner",
-      "description": "Plugin planning — business insight, architecture design, skill decomposition"
+      "description": "Plugin planning pipeline — event storming, domain modeling, skill design, spec generation"
     },
     {
       "name": "studio-quality",

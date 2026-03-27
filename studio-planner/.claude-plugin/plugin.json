@@ -8,7 +8,7 @@
   },
   "license": "Apache-2.0",
   "keywords": ["planning", "event-storming", "domain-modeling", "skill-design", "brainstorming"],
-  "dependencies": ["studio-core"],
+  "dependencies": ["studio-core", "studio-insight"],
   "skills": "./skills/",
   "commands": "./commands/"
 }

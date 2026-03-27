@@ -2,15 +2,16 @@
 
 A **Claude Code plugin marketplace** for planning, designing, validating, and shipping plugins.
 
-Astra Studio handles the **outer loop** of plugin development — multi-role brainstorming, domain modeling, plugin validation, and promotion. Individual skill authoring and testing is handled by the official [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator).
+Astra Studio handles the **outer loop** of plugin development — business analysis, domain modeling, plugin validation, and promotion. Individual skill authoring and testing is handled by the official [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator).
 
 ## Plugins
 
-| Plugin | What it does | Install |
-|--------|-------------|---------|
-| **studio-core** | Workspace management — init, promote, status | `claude plugin install studio-core@astra-studio` |
-| **studio-planner** | Plugin planning — event storming, domain modeling, skill design | `claude plugin install studio-planner@astra-studio` |
-| **studio-quality** | Quality assurance — plugin validation, MCP wiring | `claude plugin install studio-quality@astra-studio` |
+| Plugin | Skills | What it does | Install |
+|--------|--------|-------------|---------|
+| **studio-core** | 3 | Workspace management — init, promote, status | `claude plugin install studio-core@astra-studio` |
+| **studio-insight** | 6 | Business analysis toolkit — personas, journeys, processes, domains | `claude plugin install studio-insight@astra-studio` |
+| **studio-planner** | 4 | Planning pipeline — event storming, domain modeling, skill design | `claude plugin install studio-planner@astra-studio` |
+| **studio-quality** | 2 | Quality assurance — plugin validation, MCP wiring | `claude plugin install studio-quality@astra-studio` |
 
 ## Quick Start
 
@@ -20,6 +21,7 @@ claude plugin marketplace add github:VanLengs/astra-studio-plugins
 
 # 2. Install what you need
 claude plugin install studio-core@astra-studio
+claude plugin install studio-insight@astra-studio
 claude plugin install studio-planner@astra-studio
 claude plugin install studio-quality@astra-studio
 
@@ -40,21 +42,34 @@ claude plugin install studio-quality@astra-studio
 /studio-core:promote {plugin-name}
 ```
 
-## Planning Pipeline
+## studio-insight: Standalone Artifact Skills
 
-`/studio-planner:plan` chains 4 skills with user checkpoints between each:
+These 6 skills produce professional deliverables independently — no pipeline required:
+
+```bash
+/studio-insight:persona-insight "全职妈妈，两个孩子"    # → persona card + empathy map
+/studio-insight:journey-map "日常营养管理流程"           # → journey map + emotional curve
+/studio-insight:process-flow "从记录饮食到生成周报"      # → process diagram + decision points
+/studio-insight:domain-canvas "儿童健康管理"             # → domain boundary map + classification
+/studio-insight:behavior-matrix "儿童健康管理"           # → actor × action × event × data table
+/studio-insight:opportunity-brief "儿童健康管理"         # → prioritized opportunity assessment
+```
+
+## studio-planner: Planning Pipeline
+
+`/studio-planner:plan` chains 4 pipeline skills, each invoking insight artifact skills:
 
 ```
 Step 1: event-storm
   Multi-role brainstorming (PM, architect, domain experts)
-  → Discovers events, user journeys, pain points, process flows
+  → Invokes: persona-insight, journey-map, process-flow
   → Writes: studio/changes/{domain}/event-storm.md
 
         ↓ user confirms
 
 Step 2: domain-model
   Clusters events into business domains, draws plugin boundaries
-  → Classifies: core vs supporting vs generic
+  → Invokes: domain-canvas, behavior-matrix, opportunity-brief
   → Writes: studio/changes/{domain}/domain-map.md
 
         ↓ user confirms
@@ -74,52 +89,45 @@ Step 4: spec-generate
 
 ### Subagent Roles
 
-The planning process uses multiple perspectives via subagent roles:
+Both studio-insight and studio-planner use multiple perspectives via subagent roles:
 
-| Role | Perspective | Defined in |
-|------|------------|------------|
-| **Product Manager** | User personas, journey mapping, pain point prioritization | `agents/product-manager.md` |
-| **Architect** | System boundaries, dependencies, technical feasibility | `agents/architect.md` |
-| **Domain Expert** | Domain-specific knowledge, real-world constraints | `agents/_domain-expert-template.md` |
-
-Domain experts are **dynamically instantiated** based on the user's business context. For example, a children's health project might get "Children's Nutrition Expert" and "Pediatric Exercise Specialist".
+| Role | Perspective | Used by |
+|------|------------|---------|
+| **Product Manager** | User personas, journey mapping, prioritization | persona-insight, journey-map, opportunity-brief, event-storm |
+| **Architect** | System boundaries, dependencies, feasibility | process-flow, domain-canvas, behavior-matrix, domain-model |
+| **Domain Expert** | Domain-specific knowledge, real-world constraints | event-storm (dynamically instantiated) |
 
 ## Full Workflow
 
 ```
 /studio-core:init                       /studio-planner:plan
         ↓                                       ↓
-    studio/                             event-storm.md
-    ├── config.yaml                     domain-map.md
-    ├── changes/                        skill-map.md
-    └── archive/                               ↓
-                                        /spec-generate
-                                               ↓
+    studio/                             event-storm
+    ├── config.yaml                       ├── persona-insight  → personas/
+    ├── changes/                          ├── journey-map      → journeys/
+    └── archive/                          └── process-flow     → processes/
+                                                ↓
+                                        domain-model
+                                          ├── domain-canvas    → domain-canvas.md
+                                          ├── behavior-matrix  → behavior-matrix.md
+                                          └── opportunity-brief→ opportunity-brief.md
+                                                ↓
+                                        skill-design → skill-map.md
+                                                ↓
+                                        spec-generate
+                                                ↓
                                 studio/changes/{plugin}/
-                                ├── brief.md
-                                ├── plugin.json.draft
-                                ├── skill-map.md
-                                ├── status.json (building)
-                                ├── skills/
-                                │   ├── skill-a/SKILL.md  ← skeleton
-                                │   └── skill-b/SKILL.md  ← skeleton
-                                └── commands/
-                                               ↓
+                                ├── brief.md, plugin.json.draft
+                                ├── skills/{skill}/SKILL.md  ← skeletons
+                                └── commands/{skill}.md
+                                                ↓
                                     /skill-creator (official)
-                                               ↓
-                                studio/changes/{plugin}/skills/{skill}/
-                                ├── SKILL.md        ← fleshed out
-                                ├── evals/
-                                └── scripts/
-                                               ↓
+                                                ↓
                               /studio-quality:validate
-                                               ↓
-                                  status → approved
-                                               ↓
+                                                ↓
                               /studio-core:promote
-                                               ↓
-                              plugins/{collection}/{plugin}/  (shipped)
-                              studio/archive/{date}-{plugin}/ (archived)
+                                                ↓
+                              plugins/{collection}/{plugin}/
 ```
 
 ## Architecture
@@ -127,7 +135,8 @@ Domain experts are **dynamically instantiated** based on the user's business con
 Astra Studio is a **marketplace** (collection of plugins), not a monolithic plugin. Each plugin is independently installable:
 
 - **studio-core**: Zero dependencies. Manages the `studio/` workspace.
-- **studio-planner**: Depends on studio-core. Multi-role planning and design.
+- **studio-insight**: Zero dependencies. Standalone business analysis tools. Useful beyond plugin development.
+- **studio-planner**: Depends on studio-core and studio-insight. Orchestrates the planning pipeline.
 - **studio-quality**: Zero dependencies. Can validate any plugin, not just studio-managed ones.
 
 The `studio/` directory is **git-tracked** — it holds development documentation (briefs, design decisions, status) with version control value. Inspired by [OpenSpec](https://github.com/Fission-AI/OpenSpec)'s spec-driven workspace pattern.
@@ -136,7 +145,7 @@ The `studio/` directory is **git-tracked** — it holds development documentatio
 
 ```bash
 # Test locally
-claude --plugin-dir ./studio-core --plugin-dir ./studio-planner --plugin-dir ./studio-quality
+claude --plugin-dir ./studio-core --plugin-dir ./studio-insight --plugin-dir ./studio-planner --plugin-dir ./studio-quality
 ```
 
 ## License
