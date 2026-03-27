@@ -8,7 +8,7 @@ Astra Studio handles the **outer loop** of plugin development — business analy
 
 | Plugin | Skills | What it does | Install |
 |--------|--------|-------------|---------|
-| **studio-core** | 3 | Workspace management — init, promote, status | `claude plugin install studio-core@astra-studio` |
+| **studio-core** | 4 | Workspace management — init, promote, status, create-expert | `claude plugin install studio-core@astra-studio` |
 | **studio-insight** | 6 | Business analysis toolkit — personas, journeys, processes, domains | `claude plugin install studio-insight@astra-studio` |
 | **studio-planner** | 4 | Planning pipeline — event storming, domain modeling, skill design | `claude plugin install studio-planner@astra-studio` |
 | **studio-quality** | 2 | Quality assurance — plugin validation, MCP wiring | `claude plugin install studio-quality@astra-studio` |
@@ -95,7 +95,21 @@ Both studio-insight and studio-planner use multiple perspectives via subagent ro
 |------|------------|---------|
 | **Product Manager** | User personas, journey mapping, prioritization | persona-insight, journey-map, opportunity-brief, event-storm |
 | **Architect** | System boundaries, dependencies, feasibility | process-flow, domain-canvas, behavior-matrix, domain-model |
-| **Domain Expert** | Domain-specific knowledge, real-world constraints | event-storm (dynamically instantiated) |
+| **Domain Expert** | Domain-specific knowledge, real-world constraints | All 6 insight skills (dynamically discovered) |
+
+11 built-in domain experts ship with studio-insight — general roles (UX researcher, data analyst, compliance officer, operations manager) plus health and beauty domain experts.
+
+### Customizing Experts
+
+```bash
+# Create a new domain expert
+/studio-core:create-expert 宠物营养专家
+
+# Customize a built-in expert with your company's terminology
+/studio-core:create-expert customize product-manager
+```
+
+Custom experts are saved to `studio/agents/` (git-tracked, team-shared) and automatically discovered by all insight skills at runtime. Project-level experts override built-ins with the same filename.
 
 ## Full Workflow
 
