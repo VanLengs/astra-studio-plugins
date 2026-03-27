@@ -62,6 +62,6 @@ Recently Shipped (studio/archive/)
 
 Based on current state, suggest what to do next:
 - If a plugin is `approved`: "Run `/studio-core:promote {name}` to ship it"
-- If a plugin is `building`: "Use `/skill-creator` to build individual skills"
+- If a plugin is `building`: "Build individual skills using your preferred skill authoring tool"
 - If a plugin is `planning`: "Continue with `/studio-planner:plan`"
 - If no active changes: "Run `/studio-planner:plan <domain>` to start"

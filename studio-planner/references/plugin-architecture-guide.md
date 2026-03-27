@@ -1,12 +1,12 @@
 # Plugin Architecture Guide
 
-Reference for designing Claude Code plugin collections. Used by `domain-model` to make architecture decisions.
+Reference for designing plugin collections. Used by `domain-model` to make architecture decisions.
 
 ## Core Concepts
 
 ### Plugin
 
-A plugin is the **unit of installation** in Claude Code. It contains:
+A plugin is the **unit of installation**. It contains:
 - A manifest (`.claude-plugin/plugin.json`)
 - One or more skills (`skills/`)
 - Optional: commands, hooks, MCP config, scripts, references
@@ -170,11 +170,10 @@ A plugin is **add-on** if:
 - Application code (belongs in the project, not the plugin)
 - User data or credentials (use environment variables)
 - Large binary assets (reference external URLs)
-- Duplicate functionality already in Claude Code built-ins
-- Functionality that belongs in the official `skill-creator`
+- Duplicate functionality already available as built-in platform tools
 
-### Interaction with skill-creator
+### Interaction with Skill Authoring Tools
 
-The official `skill-creator` handles the **inner loop**: writing a single skill, creating evals, benchmarking, iterating. Studio plugins handle the **outer loop**: deciding what plugins and skills to build, structuring them, validating, and shipping.
+Skill authoring tools handle the **inner loop**: writing a single skill, creating evals, benchmarking, iterating. Studio plugins handle the **outer loop**: deciding what plugins and skills to build, structuring them, validating, and shipping.
 
-Do not duplicate skill-creator's capabilities. Instead, produce artifacts (SKILL.md skeletons) that skill-creator can consume.
+Do not duplicate skill authoring capabilities. Instead, produce artifacts (SKILL.md skeletons) that authoring tools can consume.

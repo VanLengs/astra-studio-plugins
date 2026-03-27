@@ -25,4 +25,4 @@ Before starting, verify `studio/` exists. If not, run the init skill first.
 
 After each pipeline step, pause and present results to the user for validation before proceeding. The user may also invoke any artifact skill independently at any time (e.g., `/studio-insight:journey-map` for a standalone journey map).
 
-After planning is complete, suggest: "Use `/skill-creator` to flesh out each skill skeleton with full instructions, scripts, and evals."
+After planning is complete, suggest: "Flesh out each skill skeleton with full instructions, scripts, and evals using your preferred skill authoring tool."

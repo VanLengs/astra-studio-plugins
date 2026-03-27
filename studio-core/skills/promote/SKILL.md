@@ -15,7 +15,7 @@ Move a completed plugin from the development workspace (`studio/changes/`) to it
 2. Read `studio/changes/$ARGUMENTS/status.json`
 3. Verify `phase` is `approved` — if not, show the current phase and explain:
    - `planning` → "Run `/studio-planner:plan` to complete the design"
-   - `building` → "Use `/skill-creator` to finish building skills"
+   - `building` → "Finish building skills using your preferred skill authoring tool"
    - `testing` → "Run `/studio-quality:validate` to approve it"
    - `shipped` → "This plugin has already been shipped"
 4. Read `target_collection` from status.json (fallback to `studio/config.yaml` `defaults.target_collection`)
@@ -37,7 +37,7 @@ If the target directory already exists, ask the user whether to overwrite.
 
 ### Step 2: Build production plugin structure
 
-Create the target directory with standard Claude Code plugin layout:
+Create the target directory with standard plugin layout:
 
 ```
 {target}/{plugin-name}/

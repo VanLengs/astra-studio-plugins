@@ -1,6 +1,6 @@
 ---
 name: plugin-validator
-description: Validate a completed plugin for structural correctness, manifest compliance, skill quality, and dependency integrity. Use when a plugin is ready for review, before packaging or promotion, after editing a plugin, or when you want a detailed diagnostic report with remediation steps. Works on any Claude Code plugin directory.
+description: Validate a completed plugin for structural correctness, manifest compliance, skill quality, and dependency integrity. Use when a plugin is ready for review, before packaging or promotion, after editing a plugin, or when you want a detailed diagnostic report with remediation steps. Works on any plugin directory.
 allowed-tools: Bash, Read, Write, Glob, Grep
 user-invocable: true
 ---

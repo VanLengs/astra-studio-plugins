@@ -154,4 +154,4 @@ Update `studio/changes/{plugin-name}/status.json`:
 - Add each skill with status `draft`
 - Keep phase as `planning`
 
-Tell the user: "Skill design complete. Run `/studio-planner:spec-generate {plugin-name}` to generate all specification files, or run `/skill-creator` directly on any skill to start building."
+Tell the user: "Skill design complete. Run `/studio-planner:spec-generate {plugin-name}` to generate all specification files, or start authoring any skill directly."

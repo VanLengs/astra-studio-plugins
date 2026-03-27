@@ -169,7 +169,7 @@ skills/
 
 ## SKILL.md Skeleton Format
 
-When producing skeletons for `skill-creator` to flesh out:
+When producing skeletons for a skill authoring tool to flesh out:
 
 ```markdown
 ---
@@ -204,7 +204,7 @@ user-invocable: true
 - {What this skill explicitly does NOT do}
 ```
 
-This skeleton gives `skill-creator` enough context to:
+This skeleton gives a skill authoring tool enough context to:
 1. Write full instructions
 2. Design evals
 3. Create helper scripts if needed

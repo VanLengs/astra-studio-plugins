@@ -59,4 +59,4 @@ This directory is git-tracked — commit it to share with your team.
 - `studio/` is meant to be committed to git — it contains development decisions and rationale
 - `studio/changes/` holds active work; `studio/archive/` holds shipped work
 - Each plugin gets its own directory under `changes/` with brief.md, status.json, and skill drafts
-- The official `skill-creator` skill handles individual skill authoring and eval — studio handles the plugin-level orchestration around it
+- Individual skill authoring and eval is handled by your preferred skill authoring tool — studio handles the plugin-level orchestration around it
