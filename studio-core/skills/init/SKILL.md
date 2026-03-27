@@ -29,6 +29,8 @@ studio/
 ├── config.yaml          # copied from template
 ├── changes/             # active plugin development (one dir per plugin)
 │   └── .gitkeep
+├── agents/              # custom domain expert definitions (override built-ins)
+│   └── .gitkeep
 └── archive/             # completed and archived plugin dev records
     └── .gitkeep
 ```
@@ -42,6 +44,7 @@ Studio initialized at studio/
 
   studio/config.yaml   — configuration
   studio/changes/      — active plugin development
+  studio/agents/       — custom domain expert definitions
   studio/archive/      — shipped plugin records
 
 This directory is git-tracked — commit it to share with your team.

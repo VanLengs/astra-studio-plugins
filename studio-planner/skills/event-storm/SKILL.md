@@ -12,9 +12,13 @@ Run a structured brainstorming session with multiple perspectives — product ma
 ## Pre-check
 
 1. Verify `studio/` exists. If not, run the init skill first.
-2. Read `${CLAUDE_SKILL_DIR}/../../agents/product-manager.md` — this defines the PM perspective.
-3. Read `${CLAUDE_SKILL_DIR}/../../agents/architect.md` — this defines the architect perspective.
-4. Read `${CLAUDE_SKILL_DIR}/../../agents/_domain-expert-template.md` — this is the template for domain experts.
+2. Load agent definitions using the **lookup order**:
+   - First check `studio/agents/{name}.md` (project-level customizations)
+   - Then fall back to built-in agents (in studio-insight and studio-planner)
+   - Project-level agents override built-ins with the same filename
+3. Always load: `product-manager.md` (PM) and `architect.md` (architect).
+4. Read `_domain-expert-template.md` — used to create new domain experts on the fly.
+5. Scan `studio/agents/` for any custom domain experts the team has created (via `/studio-insight:create-expert`).
 
 ## Workflow
 
@@ -33,13 +37,18 @@ Ask the user to describe their business domain in 2-3 sentences. Extract:
 - **Target users**: Who will use the plugins being designed?
 - **Current situation**: What tools/processes exist today?
 
-Based on the domain, **propose 2-4 domain expert roles**. Fill in the template from `_domain-expert-template.md` with concrete titles and descriptions. Examples:
+Based on the domain, **propose 2-4 domain expert roles**. Check for matching built-in experts first, then use the template for new ones.
 
-| Domain | Suggested experts |
-|--------|------------------|
-| Children's health | Children's Nutrition Expert, Pediatric Exercise Specialist |
-| Financial services | Portfolio Risk Analyst, Compliance Officer |
-| Content marketing | SEO Strategist, Content Operations Manager |
+Built-in domain experts available in studio-insight:
+- `child-nutrition-expert.md` — pediatric dietary planning
+- `child-exercise-expert.md` — pediatric movement and motor development
+- `elderly-nutrition-expert.md` — geriatric diet and chronic disease
+- `elderly-rehab-exercise-expert.md` — fall prevention and rehabilitation
+- `skincare-expert.md` — women's skincare and dermatology
+
+Also check `studio/agents/` for any custom experts the team has created.
+
+If no built-in expert matches, use `_domain-expert-template.md` to create one on the fly — or suggest the user runs `/studio-insight:create-expert` to save it for reuse.
 
 Present the proposed roles to the user. They can adjust, add, or remove roles. Once confirmed, the brainstorming begins.
 
