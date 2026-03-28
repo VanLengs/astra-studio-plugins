@@ -20,6 +20,19 @@ Run a structured brainstorming session with multiple perspectives — product ma
 4. Read `_domain-expert-template.md` — used to create new domain experts on the fly.
 5. Scan `studio/agents/` for any custom domain experts the team has created (via `/studio-insight:create-expert`).
 
+## Execution Mode
+
+At the start, ask the user which mode they prefer:
+
+> **选择执行模式：**
+> - **🔍 精细模式**（默认）— 每个步骤暂停确认，适合第一次使用或需要仔细校验的场景
+> - **⚡ 快速模式** — 仅在 3 个关键节点暂停确认，适合探索性尝试或已有领域经验的用户
+>   - 确认点 1: 专家角色 + 事件清单（合并 Step 1-2）
+>   - 确认点 2: Persona + Journey + Process 一起展示（合并 Step 3-5）
+>   - 确认点 3: Hotspot 排名（Step 6）
+
+In **fast mode**, still generate all artifacts with the same quality — just batch the validation points. If the user spots issues in a batch, pause to fix before continuing.
+
 ## Workflow
 
 1. **Set the stage** — understand the domain and assemble roles
@@ -32,7 +45,24 @@ Run a structured brainstorming session with multiple perspectives — product ma
 
 ## Step 1: Set the Stage
 
-Ask the user to describe their business domain in 2-3 sentences. Extract:
+Ask the user to describe their business domain. Use the following **guided prompt** to help them structure their input:
+
+> 请用 2-3 句话描述你的业务领域，包含以下三个要素：
+> 1. **做什么** — 哪个行业/领域，为谁服务？
+> 2. **现状** — 现在用什么工具/流程？最大的痛点是什么？
+> 3. **期望** — 希望通过插件实现什么改变？
+
+**Good vs Bad examples** — use these to coach the user if their initial description is too vague or too detailed:
+
+| ❌ Too vague | ✅ Good | ❌ Too detailed |
+|-------------|---------|----------------|
+| "做一个健康管理产品" | "儿童健康 SaaS — 帮助家长管理 3-12 岁孩子的饮食和运动。目前用 Excel + 微信群，记录麻烦且缺乏专业指导" | "我需要一个可以拍照识别食物、自动计算卡路里、生成周报PDF、对接微信小程序的系统，用 React + Node.js 开发" |
+| "帮我做个工具" | "跨境电商选品 — 帮助中小卖家在亚马逊上选品。目前人工刷榜单和看评价，效率低且容易错过趋势" | (features/tech stack = too early, this is about the domain) |
+| "教育相关" | "K12 课后辅导机构 — 帮助老师管理 30+ 学生的作业和进度。目前用纸质登记，家长沟通全靠微信群发" | (technical architecture belongs in later phases) |
+
+If the user's description is good, proceed. If too vague, ask them to add the missing element(s). If too detailed, say: "先聚焦业务场景，具体功能会在后续阶段自然浮现。"
+
+Extract:
 - **Industry/function**: What field is this? (e.g., pediatric health, fintech, content marketing)
 - **Target users**: Who will use the plugins being designed?
 - **Current situation**: What tools/processes exist today?
@@ -50,9 +80,35 @@ Also check `studio/agents/` for any custom experts the team has created.
 
 If no built-in expert matches, use `_domain-expert-template.md` to create one on the fly — or suggest the user runs `/studio-insight:create-expert` to save it for reuse.
 
-Present the proposed roles to the user. They can adjust, add, or remove roles. Once confirmed, the brainstorming begins.
+Present the proposed roles to the user with a brief explanation of **why each role is needed** and **what unique perspective it brings**. Format:
+
+> **本次头脑风暴的参与角色：**
+>
+> | 角色 | 为什么需要 | 带来的独特视角 |
+> |------|-----------|---------------|
+> | 产品经理 | 确保从用户需求出发 | 用户行为模式、优先级排序 |
+> | 架构师 | 评估技术可行性 | 系统边界、数据流、集成约束 |
+> | {领域专家} | 提供专业领域知识 | {具体贡献，如"儿童营养的年龄差异标准"} |
+>
+> 你可以增加、删除或调整角色。确认后开始头脑风暴。
+
+The user can adjust, add, or remove roles. Once confirmed, the brainstorming begins.
 
 ## Step 2: Discover Events
+
+Before diving in, briefly explain the concept of "business events" to the user:
+
+> **什么是业务事件？**
+> 事件是"已经发生的事实"，用过去式描述。它不是功能需求，而是业务中真实发生的事情。
+>
+> | ❌ 不是事件（功能/需求） | ✅ 是事件（已发生的事实） |
+> |------------------------|------------------------|
+> | 记录餐食 | 早餐食物已记录 |
+> | 需要一个营养计算器 | 单餐营养已评估 |
+> | 支持多孩管理 | 第二个孩子档案已创建 |
+> | 推送通知功能 | 营养不达标提醒已发送 |
+>
+> 我会以不同角色的视角分别列出事件，然后合并去重。你只需要看合并后的清单是否完整。
 
 Adopt each role in turn and contribute **business events** — things that happen in the domain. For each event:
 
@@ -69,7 +125,22 @@ Collect all events and **deduplicate** — different roles may describe the same
 
 ## Step 3: Build Personas
 
-Invoke the **studio-insight:persona-insight** skill for each user type identified in the events. Pass:
+From the events discovered in Step 2, identify distinct user segments. **Propose the number and scope of personas** with reasoning:
+
+> **建议创建的 Persona：**
+>
+> | Persona | 为什么单独建 | 与其他 Persona 的关键差异 |
+> |---------|-------------|------------------------|
+> | {name1} | {reason} | {difference} |
+> | {name2} | {reason} | {difference} |
+>
+> **判断标准**：如果两类用户的 **目标、痛点、使用频率** 有显著差异，就值得拆分。
+> 如果差异只在"偏好"层面（如界面语言），合并为一个即可。
+> 建议 2-3 个 Persona，超过 4 个通常说明领域范围过大，可以考虑先聚焦。
+
+Let the user confirm or adjust the persona list before proceeding.
+
+Invoke the **studio-insight:persona-insight** skill for each confirmed user type. Pass:
 - The domain context from Step 1
 - The user segments discovered in Step 2
 - The workspace path for output
@@ -80,7 +151,21 @@ Present personas to the user for validation before proceeding.
 
 ## Step 4: Map User Journeys
 
-Invoke the **studio-insight:journey-map** skill for each persona's primary scenario. Pass:
+For each persona, **propose which scenario to map** — typically the highest-frequency or highest-pain scenario:
+
+> **每个 Persona 选择一个核心场景：**
+>
+> | Persona | 推荐场景 | 选择理由 | 频率 |
+> |---------|---------|---------|------|
+> | {name1} | {scenario} | {why — e.g., 最高频/最痛的场景} | {daily/weekly} |
+> | {name2} | {scenario} | {why} | {frequency} |
+>
+> **选场景的原则**：选 **最能暴露痛点** 的场景，而不是最复杂的场景。
+> 一个 Persona 画一条 Journey 就够了，后续需要可以追加。
+
+Let the user confirm or adjust scenario selection.
+
+Invoke the **studio-insight:journey-map** skill for each persona's selected scenario. Pass:
 - The persona card from Step 3
 - The events from Step 2
 - The workspace path for output
@@ -91,7 +176,21 @@ Present journey maps to the user. Ask: "Does this match your experience? What's 
 
 ## Step 5: Model Processes
 
-Invoke the **studio-insight:process-flow** skill for each major business process identified. Pass:
+From the events and journeys, identify **major business processes** (not every micro-step — focus on processes that span multiple actors or have decision points):
+
+> **建议建模的业务流程：**
+>
+> | 流程 | 触发 → 结果 | 涉及几个参与者 | 为什么值得建模 |
+> |------|------------|--------------|---------------|
+> | {process1} | {trigger → outcome} | {N} | {reason — e.g., 有关键决策点} |
+> | {process2} | {trigger → outcome} | {N} | {reason} |
+>
+> **判断标准**：一个流程值得建模，通常因为它 **跨多个角色** 或 **有分支判断**。
+> 纯线性、单角色的操作不需要单独建模。
+
+Let the user confirm process list.
+
+Invoke the **studio-insight:process-flow** skill for each confirmed process. Pass:
 - The events from Step 2
 - The actors from persona cards
 - The workspace path for output
@@ -111,7 +210,25 @@ For each hotspot:
 - **Severity**: High (daily impact, significant cost) / Medium (weekly friction) / Low (occasional annoyance)
 - **Type**: Efficiency (too slow), Accuracy (error-prone), Knowledge (hard to find info), Integration (tools don't talk), Compliance (regulatory risk)
 
-Rank hotspots by severity. Present to the user: "These are the biggest opportunities. Do you agree with the ranking?"
+Rank hotspots by severity. Present with **transparent reasoning** so the user can adjust:
+
+> **热点排名：**
+>
+> | 排名 | 热点 | 严重度 | 类型 | 判断依据 |
+> |------|------|--------|------|---------|
+> | 1 | {desc} | 高 | 效率 | Persona {X} 痛点 #1 + Journey {Y} 情绪最低点 + Process {Z} 瓶颈 |
+> | 2 | {desc} | 高 | 知识 | Persona {X} 痛点 #3 + 专家指出缺乏{...} |
+> | ... | | | | |
+>
+> **类型说明：**
+> - **效率** — 做得到但太慢/太麻烦
+> - **准确** — 容易出错，后果大
+> - **知识** — 信息难获取或需要专业判断
+> - **集成** — 工具之间不连通，需要手动搬数据
+> - **合规** — 有法规/安全风险
+>
+> **如果你觉得排名不对**，告诉我哪个该上升/下降以及原因，我会调整。
+> 常见调整理由：实际频率比我估计的高/低、有些痛点用户已经习惯了（虽然痛但不紧急）、某些痛点有监管压力必须优先。
 
 ## Step 7: Write Output
 
@@ -172,4 +289,36 @@ Write `status.json` — this is a **domain-level** workspace (not yet a plugin).
 
 Note: domain-level workspaces have `"type": "domain"` and a `plugins` list (initially empty). Plugin-level workspaces have `"type": "plugin"` and a `skills` map. The `domain-model` skill will create plugin-level workspaces and populate the `plugins` list here.
 
-Tell the user: "Event storm complete. Run `/studio-planner:domain-model {domain-slug}` to identify plugin boundaries, or run `/studio-planner:plan {domain-slug}` to continue the full pipeline."
+Present a **Phase 1 Summary** that ties all artifacts together before suggesting next steps:
+
+> **📋 发现阶段完成 — 总览**
+>
+> **领域**：{domain description}
+> **参与角色**：{roles used}
+>
+> **发现了什么：**
+> - **{N} 个业务事件** — 覆盖 {event clusters summary, e.g., "档案管理、饮食记录、运动跟踪、报告生成 4 大类"}
+> - **{N} 个用户画像** — {persona names and one-line summaries}
+> - **{N} 条用户旅程** — {journey names}
+> - **{N} 个业务流程** — {process names}
+> - **{N} 个热点机会** — 其中 {M} 个为高严重度
+>
+> **Top 3 热点（下一阶段的重点）：**
+> 1. {HS-1 description} — {severity} / {type}
+> 2. {HS-2 description} — {severity} / {type}
+> 3. {HS-3 description} — {severity} / {type}
+>
+> **所有产出文件：**
+> ```
+> studio/changes/{domain-slug}/
+> ├── event-storm.md          ← 事件清单 + 热点排名
+> ├── personas/{name1}.md     ← 用户画像
+> ├── personas/{name2}.md
+> ├── journeys/{name}.md      ← 用户旅程
+> └── processes/{name}.md     ← 业务流程
+> ```
+>
+> **下一步做什么：**
+> 阶段二（领域建模）会基于以上产出，划分插件边界和技能拆分。
+> 运行 `/studio-planner:domain-model {domain-slug}` 进入阶段二，
+> 或运行 `/studio-planner:plan {domain-slug}` 继续完整流水线。

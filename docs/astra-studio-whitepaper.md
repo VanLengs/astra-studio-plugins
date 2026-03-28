@@ -993,11 +993,11 @@ studio/changes/nutrition-planner/
 
 ```mermaid
 stateDiagram-v2
-    [*] --> planning : /studio-planner:plan
+    [*] --> planning : /studio-planner∶plan
     planning --> building : /spec-generate
     building --> testing : 所有技能编写完成
-    testing --> approved : /studio-quality:validate 通过
-    approved --> shipped : /studio-core:promote
+    testing --> approved : /studio-quality∶validate 通过
+    approved --> shipped : /studio-core∶promote
     shipped --> [*]
 ```
 

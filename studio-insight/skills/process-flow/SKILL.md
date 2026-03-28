@@ -41,6 +41,16 @@ Accept one of:
 
 ## Step 1: Define Scope
 
+If the user is unfamiliar with process modeling, provide a quick orientation:
+
+> **流程图怎么看？**
+> 把一件事从"开始"到"结束"画成路线图。只有 3 种元素：
+> - **方框 `[xxx]`** = 一个动作发生了
+> - **菱形 `◇ xxx？`** = 一个判断点，走不同的路
+> - **箭头 `→`** = 顺序，从上到下、从左到右
+>
+> 你不需要自己画，我会生成后请你看看"是不是你们实际的做法"。
+
 Clarify:
 - **Process name**: What is this process called?
 - **Trigger**: What starts it? (user action, schedule, external event)
