@@ -16,13 +16,13 @@ Run comprehensive validation on a plugin and produce an actionable report. Check
 3. **Skill validation** — SKILL.md quality checks
 4. **Dependency checks** — MCP and inter-skill dependencies
 5. **Present findings** — summarize pass/fail with remediation steps
-6. **Update studio status** — if the plugin is in `studio/changes/`, update status.json
+6. **Update studio status** — if the plugin has a matching change workspace, update that workspace's status.json
 
 ## Step 1: Identify Plugin
 
 Accept the plugin directory path via `$ARGUMENTS`. The path can be:
 - A `{target_dir}/` directory (during development — the single source of truth for implementation)
-- A `plugins/{name}/` directory (production)
+- A root-level plugin directory such as `{name}/` (production)
 - Any directory with `.claude-plugin/plugin.json`
 
 If the user gives a skill directory, navigate up to find the plugin root.
@@ -90,9 +90,18 @@ Categories:
 
 ## Step 6: Update Studio Status (optional)
 
-If the plugin has a corresponding workspace in `studio/changes/` (look up by plugin name) and all checks pass:
-- Ask the user if they want to update the workspace's `status.json` phase to `approved`
-- If yes, update the file
+If the plugin has a corresponding workspace in `studio/changes/` (look up by plugin name, regardless of where the implementation lives) and all checks pass:
+- Ask the user if they want to update the workspace's `status.json`
+- If yes:
+  - update all in-scope built skills to `tested`
+  - set the plugin `phase` to `approved`
+  - update `updated_at`
+
+When updating the workspace:
+- Match by plugin name from the validated manifest or directory name
+- Do not require the implementation directory itself to be under `studio/changes/`
+- Preserve `target_dir`, `action`, `iteration`, and unrelated skill statuses
+- Only promote skill statuses forward (`built` → `tested`); do not downgrade already tested skills
 
 If checks fail, suggest specific remediation steps for each failure:
 

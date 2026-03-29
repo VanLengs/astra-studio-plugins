@@ -1,9 +1,9 @@
 ---
-description: Plan a new plugin — brainstorm, model domains, design skills, generate specs
+description: Plan a new plugin — brainstorm, model domains, design skills, generate specs, build skills
 argument-hint: [business domain or plugin idea]
 ---
 
-Plan a complete plugin from scratch by chaining four pipeline skills, which in turn invoke six artifact skills to produce standalone deliverables:
+Plan a complete plugin from scratch by chaining five pipeline skills, which in turn invoke six artifact skills to produce standalone deliverables:
 
 1. **event-storm** — Multi-role brainstorming for `$ARGUMENTS`.
    - Invokes: `studio-insight:persona-insight` → persona cards
@@ -21,8 +21,10 @@ Plan a complete plugin from scratch by chaining four pipeline skills, which in t
 
 4. **spec-generate** — Generate all specification files: brief.md, plugin.json.draft, SKILL.md skeletons, commands.
 
+5. **build-skills** — Automatically invoke the build stage to flesh out new skills and update modified ones in place.
+
 Before starting, verify `studio/` exists. If not, run the init skill first.
 
 After each pipeline step, pause and present results to the user for validation before proceeding. The user may also invoke any artifact skill independently at any time (e.g., `/studio-insight:journey-map` for a standalone journey map).
 
-After planning is complete, suggest: "Use `/skill-creator` to flesh out each skill skeleton with full instructions, scripts, and evals."
+After planning is complete, suggest: "Confirm the build stage so Astra Studio can invoke skill-creator automatically, then validate the plugin in its target directory."

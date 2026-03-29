@@ -1,6 +1,6 @@
 ---
 name: spec-generate
-description: Generate all plugin specification files from planning artifacts — SKILL.md skeletons, plugin.json.draft, brief.md, and commands. Use after skill-design when the skill map is ready and you want to produce the complete workspace that skill-creator can consume. Pure automation, no interactive input needed.
+description: Generate all plugin specification files from planning artifacts — SKILL.md skeletons, plugin.json.draft, brief.md, and commands. Use after skill-design when the skill map is ready and you want to produce the complete workspace that the build stage can consume. Pure automation, no interactive input needed.
 allowed-tools: Read, Write, Glob, Grep
 user-invocable: true
 ---
@@ -26,8 +26,8 @@ studio/changes/{plugin}/     ← design docs only
 1. Verify `studio/` exists.
 2. Read `studio/changes/$ARGUMENTS/skill-map.md` — required. If missing, tell the user to run `/studio-planner:skill-design` first.
 3. Read `studio/changes/$ARGUMENTS/status.json` to get the `domain`, `target_dir`, and `action` fields.
-   - `target_dir` is the path where implementation files are written (e.g., `plugins/nutrition-planner`).
-   - If `target_dir` is missing, derive it as `{target_collection}/{plugin-name}`.
+   - `target_dir` is the path where implementation files are written (e.g., `nutrition-planner`).
+   - If `target_dir` is missing, derive it as `{plugin-name}` when `target_collection` is `.` or empty; otherwise derive it as `{target_collection}/{plugin-name}`.
    - `action` is `"create"` (default) or `"modify"`.
    - Read `studio/changes/{domain}/domain-map.md` — optional, used for brief and manifest context.
    - Read `studio/changes/{domain}/event-storm.md` — optional, used for brief context.
@@ -68,7 +68,9 @@ If `brief.md` doesn't exist yet, create it using the template. Fill in:
 - **Success Criteria**: derived from event-storm.md's hotspots — the plugin succeeds if it addresses the top hotspots
 - **Notes**: any constraints, regulations, or special considerations from domain expert input
 
-If `brief.md` already exists (e.g., from a manual process), leave it unchanged.
+If `brief.md` already exists:
+- For `action: "create"`: leave it unchanged
+- For `action: "modify"`: preserve the existing content and append a short `## Iteration Update` section summarizing what changed in this iteration. Do not rewrite the whole file.
 
 ## Step 3: Generate plugin.json.draft
 
@@ -94,6 +96,12 @@ Rules:
 - `keywords` should be 3-5 searchable terms
 - `dependencies` only list other plugins in the same collection
 
+If `plugin.json.draft` already exists:
+- For `action: "create"`: replace it with the newly generated draft
+- For `action: "modify"`: refresh only the generated fields (`description`, `keywords`, `dependencies`, `updated_at` if present) and preserve user-maintained fields such as custom metadata or manually added keys
+
+In `action: "modify"` mode, treat the draft as a proposal refresh for the next release, not as the source of truth for existing implementation files.
+
 ## Step 4: Generate SKILL.md Skeletons
 
 For each skill in `skill-map.md`, create the skeleton **in the target plugin directory**:
@@ -102,9 +110,9 @@ For each skill in `skill-map.md`, create the skeleton **in the target plugin dir
 {target_dir}/skills/{skill-name}/SKILL.md
 ```
 
-This is the single source of truth — `/skill-creator` works directly on these files.
+This is the single source of truth — the build stage works directly on these files via `skill-creator`.
 
-Skeleton content — designed for the official `/skill-creator` to flesh out:
+Skeleton content — designed for the build stage to flesh out via `skill-creator`:
 
 ```markdown
 ---
@@ -142,7 +150,12 @@ user-invocable: true
 - {From skill-map.md out-of-scope list}
 ```
 
-If a SKILL.md already exists at that path, **do not overwrite** — the user or skill-creator may have already started working on it. Print a warning instead. This is especially important for `action: "modify"` where existing skills should be preserved.
+If a SKILL.md already exists at that path, **do not overwrite** — the build stage may have already updated it in a previous run. Print a warning instead. This is especially important for `action: "modify"` where existing skills should be preserved.
+
+In `action: "modify"` mode:
+- Only generate skeletons for skills explicitly listed in `skill-map.md` as **new**
+- For skills listed as **modified**, do not replace the existing `SKILL.md`; the subsequent build stage should update it in place via `skill-creator`
+- Skills not listed in this iteration's `skill-map.md` are out of scope and must not be created, deleted, or rewritten
 
 If the skill is classified as **Moderate** or above, also create the `scripts/` directory:
 
@@ -175,6 +188,12 @@ Use skill: "{skill-name}"
 
 Only create commands for skills marked `user-invocable: true`. Internal/helper skills don't need commands.
 
+If a command file already exists at that path:
+- For `action: "create"`: replace it with the generated command if it still appears to be a scaffold
+- For `action: "modify"`: do not overwrite it; print a warning instead
+
+In `action: "modify"` mode, only create commands for newly added user-invocable skills.
+
 ## Step 6: Update status.json
 
 Update `studio/changes/{plugin-name}/status.json`:
@@ -184,7 +203,7 @@ Update `studio/changes/{plugin-name}/status.json`:
   "plugin": "{plugin-name}",
   "domain": "{domain-slug}",
   "target_collection": "{from domain-map.md or config.yaml default}",
-  "target_dir": "{target_collection}/{plugin-name}",
+  "target_dir": "{plugin-name}",
   "phase": "building",
   "created_at": "{original timestamp}",
   "updated_at": "{now ISO-8601}",
@@ -195,6 +214,8 @@ Update `studio/changes/{plugin-name}/status.json`:
   }
 }
 ```
+
+For `action: "modify"`, only add or reset statuses for the skills that need work in this iteration. Leave unrelated skill statuses untouched.
 
 Note: phase advances from `planning` to `building` because the specs are now ready for implementation.
 
@@ -219,8 +240,12 @@ Implementation ({target_dir}/):
     {skill-a}.md
     {skill-b}.md
 
+Warnings:
+  - Existing SKILL.md files were preserved and not overwritten
+  - Existing commands were preserved in modify mode
+
 Next steps:
-  Use /skill-creator to flesh out each skill skeleton in {target_dir}/
+  Confirm the build stage so Astra Studio can invoke skill-creator in {target_dir}/
   Run /studio-quality:wire-mcp {target_dir} if MCP servers are needed
   Run /studio-quality:validate {target_dir} when all skills are ready
 ```

@@ -27,11 +27,11 @@ Inspired by [OpenSpec](https://github.com/Fission-AI/OpenSpec)'s `openspec init`
 ```
 studio/
 ├── config.yaml          # copied from template
-├── changes/             # active plugin development (one dir per plugin)
+├── changes/             # active design workspaces (domains + plugin change workspaces)
 │   └── .gitkeep
 ├── agents/              # custom domain expert definitions (override built-ins)
 │   └── .gitkeep
-└── archive/             # completed and archived plugin dev records
+└── archive/             # shipped plugin design history
     └── .gitkeep
 ```
 
@@ -43,20 +43,21 @@ Create `.gitkeep` files as empty files — they ensure git tracks the empty dire
 Studio initialized at studio/
 
   studio/config.yaml   — configuration
-  studio/changes/      — active plugin development
+  studio/changes/      — active domain and plugin design workspaces
   studio/agents/       — custom domain expert definitions
-  studio/archive/      — shipped plugin records
+  studio/archive/      — shipped plugin design history
 
 This directory is git-tracked — commit it to share with your team.
 ```
 
 4. Suggest next steps:
    - "Run `/studio-planner:plan <domain>` to start planning your first plugin"
-   - "Or create a plugin workspace manually: `mkdir studio/changes/my-plugin`"
+   - "Implementation files will be generated into each plugin's `target_dir`, not stored in `studio/changes/`"
 
 ## Notes
 
 - `studio/` is meant to be committed to git — it contains development decisions and rationale
-- `studio/changes/` holds active work; `studio/archive/` holds shipped work
-- Each plugin gets its own directory under `changes/` with brief.md, status.json, and skill drafts
+- `studio/changes/` holds active design workspaces; `studio/archive/` holds shipped design history
+- Domain workspaces keep long-lived planning artifacts; plugin workspaces hold design docs such as brief.md, skill-map.md, plugin.json.draft, and status.json
+- Executable implementation files live in each plugin's `target_dir` as the single source of truth
 - The official `skill-creator` skill handles individual skill authoring and eval — studio handles the plugin-level orchestration around it

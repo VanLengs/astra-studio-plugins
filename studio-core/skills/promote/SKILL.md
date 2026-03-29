@@ -21,12 +21,12 @@ Promote works identically for `action: "create"` and `action: "modify"` — in b
 2. Read `studio/changes/$ARGUMENTS/status.json`
 3. Verify `phase` is `approved` — if not, show the current phase and explain:
    - `planning` → "Run `/studio-planner:plan` to complete the design"
-   - `building` → "Use `/skill-creator` to finish building skills"
+   - `building` → "Continue the build stage so Astra Studio can finish skill implementation"
    - `testing` → "Run `/studio-quality:validate` to approve it"
    - `shipped` → "This plugin has already been shipped"
 4. Read `target_dir` from status.json (fallback: derive from `target_collection` + plugin name)
 5. Verify `{target_dir}/` exists and contains at least a `skills/` directory with SKILL.md files
-6. Verify all skills in status.json have status `tested` or `approved`
+6. Verify all in-scope skills in status.json have status `tested`
 
 If pre-conditions fail, print a clear message about what needs to happen first and exit.
 
@@ -40,7 +40,7 @@ Check that `{target_dir}/` already has the expected structure:
 {target_dir}/
 ├── skills/
 │   └── {skill-name}/
-│       └── SKILL.md         # should already exist (written by spec-generate, developed by skill-creator)
+│       └── SKILL.md         # should already exist (written by spec-generate, developed by the build stage via skill-creator)
 ├── commands/                # should already exist if skills are user-invocable
 └── ...                      # scripts/, hooks/, .mcp.json may also exist
 ```
@@ -60,19 +60,37 @@ Read `studio/changes/{name}/plugin.json.draft` and write the production manifest
 
 ### Step 3: Archive design workspace
 
-Move `studio/changes/{name}/` to `studio/archive/{YYYY-MM-DD}-{name}/`
+Archive by plugin name so a plugin's design history stays grouped:
+
+```
+studio/archive/{name}/{YYYY-MM-DD}-iteration-{N}/
+```
+
+Where `{N}` is the `iteration` field from `status.json`.
+
+If that directory already exists, append a numeric suffix:
+
+```
+studio/archive/{name}/{YYYY-MM-DD}-iteration-{N}-1/
+studio/archive/{name}/{YYYY-MM-DD}-iteration-{N}-2/
+```
+
+This avoids collisions when a plugin is promoted multiple times on the same day or when a previous archive already exists for that iteration label.
+
+Move `studio/changes/{name}/` into the resolved archive path.
 
 Update the archived `status.json`:
 - Set `phase` to `shipped`
 - Add `shipped_at` timestamp
 - Add `shipped_to` path (the `target_dir` value)
+- Add `archive_path` with the final archive directory path
 
 ### Step 4: Report
 
 Print:
 - What was promoted and where: "Plugin `{name}` finalized at `{target_dir}/`"
 - Manifest location: `{target_dir}/.claude-plugin/plugin.json`
-- Archive location: `studio/archive/{date}-{name}/`
+- Archive location: `studio/archive/{name}/{date}-iteration-{N}/` (or suffixed variant if needed)
 - Remind user to review and commit: "Review the finalized plugin, then commit when ready"
 
 ## Does NOT

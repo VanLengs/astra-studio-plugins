@@ -360,19 +360,7 @@ Write `event-storm.md` with the following sections:
 {List of all ◇ decision points — these inform skill boundaries}
 ```
 
-Write `status.json` — this is a **domain-level** workspace (not yet a plugin). The `type` field distinguishes it:
-
-```json
-{
-  "type": "domain",
-  "domain": "{domain-slug}",
-  "phase": "planning",
-  "created_at": "{ISO-8601}",
-  "plugins": []
-}
-```
-
-Note: domain-level workspaces have `"type": "domain"` and a `plugins` list (initially empty). Plugin-level workspaces have `"type": "plugin"` and a `skills` map. The `domain-model` skill will create plugin-level workspaces and populate the `plugins` list here.
+Note: domain-level workspaces have `"type": "domain"` and a cumulative `plugins` list. Use the status schema shown above in the `### status.json` section. Plugin-level workspaces have `"type": "plugin"` and a `skills` map. The `domain-model` skill will create plugin-level workspaces and populate the `plugins` list here.
 
 Present a **Phase 1 Summary** that ties all artifacts together before suggesting next steps:
 

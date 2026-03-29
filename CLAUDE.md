@@ -7,7 +7,7 @@ This is a marketplace of Claude Code plugins for plugin development workflows. E
 ```
 ├── studio-core/         # Workspace management (init, promote, status, create-expert) — 4 skills
 ├── studio-insight/      # Business analysis toolkit (personas, journeys, processes, domains) — 6 skills
-├── studio-planner/      # Planning pipeline (event-storm, domain-model, skill-design, spec-generate) — 4 skills
+├── studio-planner/      # Planning pipeline (event-storm, domain-model, skill-design, spec-generate, build-skills) — 5 skills
 ├── studio-quality/      # Quality assurance (plugin validation, MCP wiring) — 2 skills
 ```
 
@@ -62,7 +62,7 @@ All 6 insight skills use **dynamic expert discovery** — they scan for relevant
 
 1. **Spec-implementation separation**: `studio/changes/` holds only design documents (brief, skill-map, status, plugin.json.draft). Implementation files (SKILL.md, commands, scripts) live directly in the target plugin directory — single source of truth, no duplication.
 2. **Plugin-first**: The workspace (`studio/changes/`) is organized by plugin, not by skill
-3. **Outer loop only**: Individual skill authoring delegates to the built-in `anthropic-skills:skill-creator`
+3. **Outer loop orchestration**: Astra Studio orchestrates planning, build, validation, and shipping, while individual skill authoring is executed through the built-in `anthropic-skills:skill-creator`
 4. **Git-tracked workspace**: `studio/` directory in user projects is version-controlled (briefs, status, design decisions)
 5. **Standard Claude Code plugin spec**: No proprietary extensions — works with any Claude Code installation
 6. **Platform-neutral outputs**: SKILL.md skeletons produced by spec-generate contain no Claude-specific references — they run on any compatible runtime
@@ -118,7 +118,7 @@ Domains evolve incrementally. Each re-run of the pipeline on an existing domain 
 
 ## Planning Pipeline
 
-`/studio-planner:plan` chains 4 pipeline skills, each invoking insight artifact skills:
+`/studio-planner:plan` chains 5 pipeline skills, each invoking insight artifact skills:
 
 ```
 event-storm → persona-insight + journey-map + process-flow
@@ -128,6 +128,8 @@ domain-model → domain-canvas + behavior-matrix + opportunity-brief
 skill-design
      ↓
 spec-generate → SKILL.md skeletons (platform-neutral output)
+     ↓
+build-skills → auto-build via skill-creator
 ```
 
 ## Development Workflow

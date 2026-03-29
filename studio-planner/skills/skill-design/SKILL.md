@@ -183,4 +183,4 @@ Update `studio/changes/{plugin-name}/status.json`:
 }
 ```
 
-Tell the user: "Skill design complete. Run `/studio-planner:spec-generate {plugin-name}` to generate all specification files, or run `/skill-creator` directly on any skill to start building."
+Tell the user: "Skill design complete. Run `/studio-planner:spec-generate {plugin-name}` to generate all specification files, then confirm the build stage to let Astra Studio invoke skill-creator automatically."

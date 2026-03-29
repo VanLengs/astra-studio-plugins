@@ -8,7 +8,7 @@ schema: plugin-first
 # Default settings for new plugin workspaces
 defaults:
   # Where to promote plugins (relative to project root)
-  target_collection: plugins
+  target_collection: .
   # Default governance metadata
   governance:
     risk_level: low

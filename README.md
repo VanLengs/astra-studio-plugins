@@ -2,7 +2,7 @@
 
 A **Claude Code plugin marketplace** for planning, designing, validating, and shipping plugins.
 
-Astra Studio handles the **outer loop** of plugin development — business analysis, domain modeling, plugin validation, and promotion. Individual skill authoring and testing is handled by the official [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator).
+Astra Studio handles the **outer loop** of plugin development — business analysis, domain modeling, plugin validation, and promotion. Individual skill authoring and testing is executed through the official [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) as an internal pipeline capability.
 
 ## Plugins
 
@@ -10,7 +10,7 @@ Astra Studio handles the **outer loop** of plugin development — business analy
 |--------|--------|-------------|---------|
 | **studio-core** | 4 | Workspace management — init, promote, status, create-expert | `claude plugin install studio-core@astra-studio` |
 | **studio-insight** | 6 | Business analysis toolkit — personas, journeys, processes, domains | `claude plugin install studio-insight@astra-studio` |
-| **studio-planner** | 4 | Planning pipeline — event storming, domain modeling, skill design | `claude plugin install studio-planner@astra-studio` |
+| **studio-planner** | 5 | Planning pipeline — event storming, domain modeling, skill design, build orchestration | `claude plugin install studio-planner@astra-studio` |
 | **studio-quality** | 2 | Quality assurance — plugin validation, MCP wiring | `claude plugin install studio-quality@astra-studio` |
 
 ## Quick Start
@@ -31,9 +31,8 @@ claude plugin install studio-quality@astra-studio
 # 4. Plan a plugin
 /studio-planner:plan "your business domain"
 
-# 5. Build each skill (uses official skill-creator)
-/skill-creator
-# → point it at {target_dir}/skills/{skill}/SKILL.md (the single source of truth)
+# 5. Confirm the build plan
+# → Astra Studio generates specs, then automatically invokes skill-creator in {target_dir}/
 
 # 6. Validate the plugin
 /studio-quality:validate {target_dir}
@@ -57,7 +56,7 @@ These 6 skills produce professional deliverables independently — no pipeline r
 
 ## studio-planner: Planning Pipeline
 
-`/studio-planner:plan` chains 4 pipeline skills, each invoking insight artifact skills:
+`/studio-planner:plan` chains 5 pipeline skills, each invoking insight artifact skills:
 
 ```
 Step 1: event-storm
@@ -87,6 +86,13 @@ Step 4: spec-generate
   → Design docs → studio/changes/ (brief.md, plugin.json.draft)
   → Implementation → {target_dir}/ (SKILL.md skeletons, commands)
   → Advances status: planning → building
+
+Step 5+: build, validate, promote
+  build-skills automatically invokes skill-creator to edit the implementation in {target_dir}/
+  build-skills advances skill states from draft/building to built
+  /studio-quality:validate validates {target_dir}/ and updates the matching workspace
+  /studio-quality:validate advances built skills to tested and the plugin to approved
+  /studio-core:promote finalizes the manifest and archives only the design workspace
 ```
 
 ### Subagent Roles
@@ -136,13 +142,13 @@ Custom experts are saved to `studio/agents/` (git-tracked, team-shared) and auto
                                 ├── brief.md                skills/{skill}/SKILL.md
                                 └── plugin.json.draft       commands/{skill}.md
                                                 ↓
-                                    /skill-creator (official)
+                              build-skills
                                                 ↓
                               /studio-quality:validate
                                                 ↓
                               /studio-core:promote
                                                 ↓
-                              plugins/{collection}/{plugin}/
+          studio/archive/{plugin}/{date}-iteration-{N}/   {target_dir}/
 ```
 
 ## Architecture
@@ -157,6 +163,8 @@ Astra Studio is a **marketplace** (collection of plugins), not a monolithic plug
 The `studio/` directory is **git-tracked** — it holds development documentation (briefs, design decisions, status) with version control value. Inspired by [OpenSpec](https://github.com/Fission-AI/OpenSpec)'s spec-driven workspace pattern.
 
 Domains evolve **incrementally** — re-running the pipeline updates artifacts in-place (git diff = revision history), `changelog.md` logs each iteration, and only affected plugins (`create`/`modify`) get change workspaces.
+
+Shipped plugins keep their implementation in `{target_dir}/` and move only the design workspace to `studio/archive/{plugin}/{date}-iteration-{N}/` so active work stays clean while design history remains traceable.
 
 ## Development
 
