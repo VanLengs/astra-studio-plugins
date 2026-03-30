@@ -266,6 +266,48 @@ Rank hotspots by severity. Present with **transparent reasoning** so the user ca
 > **如果你觉得排名不对**，告诉我哪个该上升/下降以及原因，我会调整。
 > 常见调整理由：实际频率比我估计的高/低、有些痛点用户已经习惯了（虽然痛但不紧急）、某些痛点有监管压力必须优先。
 
+### Knowledge Base Dependencies
+
+For each hotspot, assess whether addressing it requires **domain knowledge beyond general LLM capability**:
+
+> **知识库依赖分析：**
+>
+> | 热点 | 需要的领域知识 | 知识类型 | 更新频率 |
+> |------|-------------|---------|---------|
+> | {HS-1} | {e.g., 儿童营养标准表} | 结构化数据 | 年度更新 |
+> | {HS-2} | {e.g., 教学大纲对照} | 参考文档 | 学期更新 |
+> | {HS-3} | — (通用 LLM 能力足够) | — | — |
+>
+> **知识类型说明：**
+> - **参考文档** — 静态指南、标准、规范（放在 `references/` 即可）
+> - **结构化数据** — 表格、数据库、需要查询和匹配的知识（可能需要 KB 插件）
+> - **历史案例** — 过往项目、案例库、需要检索的知识（建议 KB 插件）
+> - **实时数据** — 需要 API 或外部数据源（需要 MCP 集成）
+>
+> 如果有 3+ 个知识源且更新频率较高，建议创建伴生 KB 插件来管理领域知识。
+
+This analysis feeds the `kb-dependent` trait in skill-design.
+
+### Expert Scope Analysis
+
+Determine which domain experts are needed only during planning (this brainstorming session) vs also during runtime (when end users operate the plugin):
+
+> **专家范围分析：**
+>
+> | 专家角色 | 规划阶段 | 运行阶段 | 说明 |
+> |---------|---------|---------|------|
+> | 产品经理 | ✅ | — | 仅用于规划（确定需求和优先级） |
+> | 架构师 | ✅ | — | 仅用于规划（系统设计和边界） |
+> | {领域专家 A} | ✅ | ✅ | 规划 + 运行（运行时用于质量审核） |
+> | {领域专家 B} | — | ✅ | 仅运行时（用于实时建议和校验） |
+>
+> **规则：**
+> - 规划阶段专家 → 保留在 `studio-insight/agents/` 或 `studio/agents/`，不随插件分发
+> - 运行阶段专家 → 需要作为 agent 定义随插件分发到 `{target_dir}/agents/`
+> - 两者兼有 → 规划阶段使用 studio 版本，运行阶段使用随插件分发的版本（可以是同一个定义的副本）
+
+This analysis feeds the `expert-scoped` trait in skill-design.
+
 ## Step 7: Write Output
 
 Create the workspace and save results. By this point the artifact skills have already created subdirectories:
@@ -355,6 +397,12 @@ Write `event-storm.md` with the following sections:
 
 ## Hotspots
 {Ranked hotspot list from Step 6}
+
+## Knowledge Base Dependencies
+{KB dependency table from Step 6 — which hotspots need domain knowledge, what type, update frequency}
+
+## Expert Scope
+{Expert scope table from Step 6 — which experts are planning-only vs runtime vs both}
 
 ## Decision Points
 {List of all ◇ decision points — these inform skill boundaries}

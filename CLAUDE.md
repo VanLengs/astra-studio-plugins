@@ -67,6 +67,24 @@ All 6 insight skills use **dynamic expert discovery** — they scan for relevant
 5. **Standard Claude Code plugin spec**: No proprietary extensions — works with any Claude Code installation
 6. **Platform-neutral outputs**: SKILL.md skeletons produced by spec-generate contain no Claude-specific references — they run on any compatible runtime
 7. **Customizable experts**: Users create domain experts via `/studio-core:create-expert`, saved to `studio/agents/` (git-tracked, team-shared)
+8. **Plugin traits**: skill-design detects cross-cutting characteristics (stateful, hil-gated, kb-dependent, multi-pipeline, expert-scoped) that drive conditional scaffolding in spec-generate
+9. **Runtime workspace convention**: Stateful plugins get `.{plugin-name}/` runtime workspace scaffolding — separate from `studio/` which serves plugin development
+10. **Initial fill, not final build**: build-skills produces working first drafts; users iterate with skill-creator before validation
+11. **Versioned promotion**: promote creates versioned milestones (v0.1 → v0.2); design docs are snapshotted to archive but stay active for continued iteration
+
+## Plugin Traits
+
+Traits are cross-cutting characteristics detected during `skill-design` from planning artifacts:
+
+| Trait | What it means | What spec-generate produces |
+|-------|--------------|---------------------------|
+| `stateful` | Plugin manages project data across sessions | `init-workspace` skill + runtime config/status templates |
+| `hil-gated` | Workflow has human approval checkpoints | `## Approval Gate` sections in relevant SKILL.md |
+| `kb-dependent` | Skills need domain knowledge beyond LLM | KB integration notes; possibly companion KB plugin |
+| `multi-pipeline` | 2+ independent business workflows | Per-pipeline orchestration commands |
+| `expert-scoped` | Runtime needs different experts than planning | Runtime agent definitions in `agents/` |
+
+Traits are observations, not configuration. Plugins with no detected traits follow the standard generation path unchanged.
 
 ## Workspace Lifecycle
 
@@ -80,9 +98,9 @@ studio/
 │   │   ├── event-storm.md     # Brainstorming output (updated in-place on iterations)
 │   │   ├── changelog.md       # Append-only iteration log
 │   │   ├── domain-map.md      # Domain analysis
-│   │   ├── domain-canvas.md   # Domain boundaries
-│   │   ├── behavior-matrix.md # Actor/action/event matrix
-│   │   ├── opportunity-brief.md # Priority assessment
+│   │   ├── domain-canvas.md   # Domain boundaries (full analysis mode)
+│   │   ├── behavior-matrix.md # Actor/action/event matrix (full analysis mode)
+│   │   ├── opportunity-brief.md # Priority assessment (full analysis mode)
 │   │   ├── personas/          # Persona cards
 │   │   ├── journeys/          # Journey maps
 │   │   ├── processes/         # Process flows
@@ -90,15 +108,18 @@ studio/
 │   └── {plugin-name}/        # Plugin-level workspace (type: "plugin")
 │       ├── brief.md           # Business context
 │       ├── plugin.json.draft  # Manifest draft
-│       ├── skill-map.md       # Skill design rationale
+│       ├── skill-map.md       # Skill design rationale + plugin traits + pipelines
 │       └── status.json        # { type: "plugin", domain, target_dir, action, phase }
-└── archive/             # Shipped plugin design records
+└── archive/             # Versioned snapshots of design records (originals stay in changes/)
 
 {target_dir}/                  # Implementation — single source of truth
 ├── skills/{skill}/SKILL.md    # Skeletons generated here by spec-generate
 ├── commands/{skill}.md        # Command files generated here
+├── commands/{pipeline}.md     # Pipeline orchestration commands (multi-pipeline trait)
 ├── scripts/                   # Helper scripts created here
 ├── hooks/                     # Hooks created here
+├── agents/                    # Runtime domain experts (expert-scoped trait)
+├── templates/                 # Runtime config/status templates (stateful trait)
 └── .mcp.json                  # MCP config created here
 ```
 
@@ -115,21 +136,22 @@ Domains evolve incrementally. Each re-run of the pipeline on an existing domain 
 - **changelog.md** tracks each iteration — what was added, revised, and which plugins are impacted.
 - **Plugin actions**: Only `create` and `modify`. Unchanged plugins don't appear in `studio/changes/`.
 - **Small changes bypass the pipeline** — users can directly edit SKILL.md files or other implementation without re-running event-storm/domain-model.
+- **Promotion is a milestone** — `promote` snapshots design docs to archive but keeps the active workspace for the next iteration. Version numbers increment automatically.
 
 ## Planning Pipeline
 
-`/studio-planner:plan` chains 5 pipeline skills, each invoking insight artifact skills:
+`/studio-planner:plan` chains 5 pipeline skills:
 
 ```
-event-storm → persona-insight + journey-map + process-flow
+event-storm → persona-insight + journey-map + process-flow + KB deps + expert scope
      ↓
-domain-model → domain-canvas + behavior-matrix + opportunity-brief
+domain-model → [optional: domain-canvas + behavior-matrix + opportunity-brief]
+     ↓         (full analysis mode — or fast mode skips these)
+skill-design → plugin traits detection + skill breakdown
      ↓
-skill-design
-     ↓
-spec-generate → SKILL.md skeletons (platform-neutral output)
-     ↓
-build-skills → auto-build via skill-creator
+spec-generate → SKILL.md skeletons + trait-conditional scaffolding
+     ↓           (runtime workspace, HIL gates, pipeline commands)
+build-skills → initial drafts via skill-creator (test & iterate before validation)
 ```
 
 ## Development Workflow

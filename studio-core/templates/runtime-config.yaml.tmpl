@@ -1,0 +1,26 @@
+# {{PLUGIN_NAME}} Runtime Configuration
+# Created by init-workspace skill
+# This file is git-tracked — shared across the team.
+
+schema: {{PLUGIN_NAME}}
+
+defaults:
+  target_collection: .
+  governance:
+    approval_required: false
+
+lifecycle:
+  phases:
+    - planning
+    - in-progress
+    - reviewing
+    - approved
+    - shipped
+  initial_phase: planning
+
+runtime:
+  projects_dir: .{{PLUGIN_NAME}}/projects
+  archive_dir: .{{PLUGIN_NAME}}/archive
+
+experts:
+  custom_dir: .{{PLUGIN_NAME}}/agents/custom

@@ -178,3 +178,125 @@ A plugin is **add-on** if:
 The official `skill-creator` handles the **inner loop**: writing a single skill, creating evals, benchmarking, iterating. Studio plugins handle the **outer loop**: deciding what plugins and skills to build, structuring them, validating, and shipping.
 
 Do not duplicate skill-creator's capabilities. Instead, produce artifacts (SKILL.md skeletons) that skill-creator can consume.
+
+---
+
+## Plugin Traits
+
+Traits are cross-cutting characteristics detected during `skill-design` that shape the plugin's architecture. They drive conditional scaffolding in `spec-generate`.
+
+| Trait | What it means | What gets generated |
+|-------|--------------|-------------------|
+| `stateful` | Plugin manages project data across sessions | `init-workspace` skill, runtime config/status templates |
+| `hil-gated` | Workflow has human approval checkpoints | `## Approval Gate` sections in relevant SKILL.md |
+| `kb-dependent` | Skills need domain knowledge beyond LLM | KB integration notes; possibly companion KB plugin |
+| `multi-pipeline` | 2+ independent business workflows | Per-pipeline orchestration commands |
+| `expert-scoped` | Runtime needs different experts than planning | Runtime agent definitions in `agents/` |
+
+Traits are observations, not configuration. They're detected from planning artifacts and confirmed by the user. A plugin with no detected traits follows the standard generation path.
+
+---
+
+## Runtime Patterns
+
+### Runtime Workspace Pattern
+
+Use when a plugin manages project data across sessions (trait: `stateful`).
+
+```
+.{plugin-name}/
+├── config.yaml          # runtime configuration
+├── projects/            # active project workspaces
+│   └── {project-name}/
+│       └── status.json  # project phase, skill completion
+├── agents/
+│   └── custom/          # project-specific expert overrides
+└── archive/             # completed project deliverables
+```
+
+**When to use:**
+- Plugin tracks project state (creation → in-progress → review → done)
+- Users work on multiple projects simultaneously
+- Project data should persist between sessions
+
+**When NOT to use:**
+- Plugin is stateless (single invocation, no project concept)
+- Plugin only produces output files without tracking state
+
+**Standard skills for stateful plugins:**
+- `init-workspace` — creates `.{plugin-name}/` directory structure
+- `manage-config` (optional) — view/update runtime settings
+- `status` (optional) — show project dashboard
+
+**Runtime workspace vs studio workspace:**
+- `studio/` = plugin **development** workspace (design docs, planning artifacts)
+- `.{plugin-name}/` = plugin **runtime** workspace (end-user project data)
+- These serve different purposes and should never be conflated
+
+### HIL Checkpoint Pattern
+
+Use when a workflow requires human review/approval before proceeding (trait: `hil-gated`).
+
+```markdown
+## Approval Gate
+
+1. Present draft result with clear summary
+2. Ask for explicit confirmation:
+   - ✅ Confirm — proceed
+   - ✏️ Modify — apply changes and re-present
+   - ❌ Reject — discard and explain what's needed
+3. Record the decision in project status.json (if stateful)
+```
+
+**Rules:**
+- Maximum one HIL checkpoint per skill. If a skill needs multiple gates, split it.
+- The checkpoint always comes **after** the skill produces its draft, **before** it writes the final output.
+- In pipeline orchestration commands, the pause between skills is implicit (user confirms before next step starts). HIL checkpoints are for **within-skill** approval gates that have different reviewers or higher stakes.
+- Record decisions for audit trail: who approved, when, any notes.
+
+### Knowledge Base Integration Pattern
+
+Three levels of domain knowledge integration:
+
+| Level | Mechanism | When to use |
+|-------|-----------|-------------|
+| **Inline** | `references/` in skill directory | 1-2 static documents, rarely updated |
+| **Plugin-level** | `references/` at plugin root | Shared across skills, moderate volume |
+| **Companion KB plugin** | Separate `{name}-kb` plugin with import/index/query skills | 3+ knowledge sources, frequently updated, needs search |
+
+**Companion KB plugin structure:**
+```
+{name}-kb/
+├── skills/
+│   ├── kb-import/SKILL.md    # Import documents into KB
+│   ├── kb-index/SKILL.md     # Index and categorize
+│   └── kb-query/SKILL.md     # Search and retrieve
+└── commands/
+```
+
+The main plugin declares a dependency on the KB plugin. Skills that need domain knowledge invoke `kb-query` or read from the KB directory.
+
+### Multi-Pipeline Orchestration Pattern
+
+Use when a plugin serves 2+ independent business workflows (trait: `multi-pipeline`).
+
+```
+{plugin-name}/
+├── skills/
+│   ├── shared-skill-a/       # used by multiple pipelines
+│   ├── pipeline1-step1/      # pipeline 1 only
+│   ├── pipeline1-step2/
+│   ├── pipeline2-step1/      # pipeline 2 only
+│   └── pipeline2-step2/
+└── commands/
+    ├── pipeline1.md           # orchestrates pipeline 1
+    ├── pipeline2.md           # orchestrates pipeline 2
+    └── shared-skill-a.md      # standalone invocation
+```
+
+**Rules:**
+- Each pipeline gets its own orchestration command
+- Shared skills are invocable standalone AND as part of pipelines
+- Pipeline commands chain skills with user review pauses between steps
+- Skill naming: prefix pipeline-specific skills with the pipeline name only if there's ambiguity; prefer descriptive verb-noun names
+- Users can run any pipeline independently; no pipeline depends on another completing first

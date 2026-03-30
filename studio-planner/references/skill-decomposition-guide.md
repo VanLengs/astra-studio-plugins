@@ -57,6 +57,10 @@ Cluster capabilities that:
 | Different users invoke different parts | Split by persona |
 | Skill would exceed ~300 lines of SKILL.md | Split by phase |
 | Output serves as input to a user decision | Split at the decision point |
+| HIL checkpoint (approval gate) exists between steps | Split at the approval boundary |
+| Skill spans two independent pipelines | Split into pipeline-specific skills |
+| Plugin is stateful but has no workspace init | Add dedicated `init-workspace` skill |
+| Skill needs domain KB but others don't | Separate KB-dependent skills for clarity |
 
 **Merge when:**
 | Signal | Action |
@@ -109,6 +113,50 @@ configure-settings
 import-data
 export-report
 ```
+
+---
+
+## Trait-Driven Standard Skills
+
+When `skill-design` detects plugin traits, certain standard skills and patterns should be included:
+
+### Stateful plugins
+
+| Standard Skill | Purpose | Complexity |
+|---------------|---------|-----------|
+| `init-workspace` | Create `.{plugin-name}/` runtime directory | Moderate (scripts for directory creation + config) |
+| `manage-config` (optional) | View/update runtime settings | Simple |
+| `status` (optional) | Show project dashboard | Moderate (scripts for status aggregation) |
+
+The `init-workspace` skill is always generated for stateful plugins. `manage-config` and `status` are recommended when the plugin manages multiple projects.
+
+### HIL-gated plugins
+
+- Every skill with an approval gate gets an `## Approval Gate` section
+- Maximum one gate per skill — if a workflow has multiple gates, split into separate skills
+- The gate goes after draft production, before final output write
+- If the plugin is also stateful, record decisions in `status.json`
+
+### KB-dependent plugins
+
+| KB complexity | Approach |
+|--------------|---------|
+| 1-2 static docs | Inline `references/` in skill directory |
+| 3+ docs, shared across skills | Plugin-level `references/` |
+| Complex, frequently updated, needs search | Companion `{name}-kb` plugin |
+
+### Multi-pipeline plugins
+
+- Each pipeline gets an orchestration command (`commands/{pipeline-name}.md`)
+- Skills can be pipeline-specific or shared
+- Shared skills are listed in the `## Pipelines → Shared skills` section of skill-map.md
+- Pipeline commands chain skills with user review pauses between steps
+
+### Expert-scoped plugins
+
+- Planning-phase experts stay in `studio-insight/agents/` or `studio/agents/`
+- Runtime experts are shipped with the plugin in `{target_dir}/agents/`
+- If an expert serves both phases, the runtime version is a copy (may be simplified for end-user context)
 
 ---
 
@@ -208,6 +256,23 @@ This skeleton gives `skill-creator` enough context to:
 1. Write full instructions
 2. Design evals
 3. Create helper scripts if needed
+
+### Extended Skeleton (trait-driven)
+
+When plugin traits are detected, the skeleton may include additional sections:
+
+```markdown
+## Approval Gate
+{Only for skills with HIL checkpoint — standardized approval prompt}
+
+## Knowledge Base
+{Only for KB-dependent skills — what domain knowledge is needed and where to find it}
+
+## Pipeline Context
+{Only for multi-pipeline skills — which pipeline(s) this skill belongs to}
+```
+
+These sections are injected by `spec-generate` based on the `## Plugin Traits` section in skill-map.md.
 
 ---
 

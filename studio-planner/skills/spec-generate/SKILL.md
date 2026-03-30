@@ -34,6 +34,8 @@ studio/changes/{plugin}/     ← design docs only
    - If no `domain` field or domain-level files don't exist, proceed without them.
 4. Read `${CLAUDE_SKILL_DIR}/../../templates/brief.md.tmpl` — template for brief.md.
 5. Read `${CLAUDE_SKILL_DIR}/../../templates/status.json.tmpl` — template for status.json.
+6. Read the `## Plugin Traits` section from `skill-map.md`. Extract the detected traits (stateful, hil-gated, kb-dependent, multi-pipeline, expert-scoped). If the section is absent, proceed with no traits — all trait-conditional steps are skipped.
+7. If `multi-pipeline` trait is detected, also read the `## Pipelines` section from `skill-map.md`.
 
 ## Workflow
 
@@ -165,6 +167,177 @@ If the skill is classified as **Moderate** or above, also create the `scripts/` 
 
 If the skill is classified as **MCP-dependent**, note it for later — `/studio-quality:wire-mcp` will handle the MCP config.
 
+## Step 4.5: Generate Runtime Workspace Scaffolding (stateful trait only)
+
+Skip this step if the `stateful` trait was NOT detected in `skill-map.md`.
+
+When a plugin manages project data across sessions, it needs a runtime workspace for its end users — analogous to how `studio/` serves plugin developers. Generate the scaffolding:
+
+### 4.5.1 Init-workspace skill skeleton
+
+Create `{target_dir}/skills/init-workspace/SKILL.md`:
+
+```markdown
+---
+name: init-workspace
+description: Initialize the runtime workspace for {plugin-name}. Use when starting a new project, when someone says "set up" or "initialize", or when the workspace directory is missing. Creates a git-tracked workspace for managing project data.
+allowed-tools: Read, Write, Bash, Glob
+user-invocable: true
+---
+
+# Initialize Workspace
+
+Create the `.{plugin-name}/` runtime directory in the current project for managing project data.
+
+## Pre-check
+
+1. Check if `.{plugin-name}/` already exists at the project root
+   - If yes: read `.{plugin-name}/config.yaml`, report current status, and exit
+   - If no: proceed with initialization
+
+## Steps
+
+1. Read the config template from `${{CLAUDE_SKILL_DIR}}/../../templates/runtime-config.yaml.tmpl`
+2. Create the directory structure:
+
+\```
+.{plugin-name}/
+├── config.yaml          # runtime configuration
+├── projects/            # active project workspaces
+│   └── .gitkeep
+├── agents/              # runtime domain expert definitions
+│   └── custom/
+│       └── .gitkeep
+└── archive/             # completed project deliverables
+    └── .gitkeep
+\```
+
+3. Print summary and suggest next steps.
+
+## Out of Scope
+- Plugin development (that's studio/)
+- Application code or deployment
+```
+
+Also create the command: `{target_dir}/commands/init-workspace.md`:
+
+```markdown
+---
+description: Initialize the runtime workspace for {plugin-name}
+argument-hint: []
+---
+
+Initialize `.{plugin-name}/` workspace for managing project data.
+
+Use skill: "init-workspace"
+```
+
+### 4.5.2 Runtime config template
+
+Create `{target_dir}/templates/runtime-config.yaml.tmpl`:
+
+```yaml
+# {plugin-name} Runtime Configuration
+# Created by init-workspace skill
+
+schema: {plugin-name}
+
+defaults:
+  target_collection: .
+  governance:
+    approval_required: false
+
+lifecycle:
+  phases:
+    - planning
+    - in-progress
+    - reviewing
+    - approved
+    - shipped
+  initial_phase: planning
+
+runtime:
+  projects_dir: .{plugin-name}/projects
+  archive_dir: .{plugin-name}/archive
+
+experts:
+  custom_dir: .{plugin-name}/agents/custom
+```
+
+### 4.5.3 Runtime status template
+
+Create `{target_dir}/templates/runtime-status.json.tmpl`:
+
+```json
+{
+  "type": "project",
+  "project": "{{PROJECT_NAME}}",
+  "phase": "planning",
+  "created_at": "{{TIMESTAMP}}",
+  "updated_at": "{{TIMESTAMP}}",
+  "skills": {}
+}
+```
+
+If any of these files already exist, do not overwrite — print a warning.
+
+## Step 4.6: Add HIL Checkpoint Patterns (hil-gated trait only)
+
+Skip this step if the `hil-gated` trait was NOT detected in `skill-map.md`.
+
+For each skill in `skill-map.md` marked with `HIL checkpoint: yes`, inject an `## Approval Gate` section into the SKILL.md skeleton (generated in Step 4). Insert it before the `## Out of Scope` section:
+
+```markdown
+## Approval Gate
+
+This skill contains a human approval checkpoint. Before producing the final output:
+
+1. Present the draft result to the user with a clear summary
+2. Ask for explicit confirmation:
+
+> **审批检查点：**
+>
+> {summary of what was produced}
+>
+> 请选择：
+> - ✅ **确认** — 结果符合预期，继续
+> - ✏️ **修改** — 需要调整（请说明哪里需要改）
+> - ❌ **拒绝** — 需要重做（请说明原因）
+
+3. If confirmed: proceed to save output and update status
+4. If modification requested: apply changes and re-present
+5. If rejected: discard draft, explain what's needed differently
+
+Record the decision in the project's `status.json` if the plugin is stateful.
+```
+
+## Step 4.7: Generate Pipeline Orchestration Commands (multi-pipeline trait only)
+
+Skip this step if the `multi-pipeline` trait was NOT detected in `skill-map.md`.
+
+Read the `## Pipelines` section from `skill-map.md`. For each pipeline, generate an orchestration command:
+
+`{target_dir}/commands/{pipeline-name}.md`:
+
+```markdown
+---
+description: {pipeline description — what business workflow this runs}
+argument-hint: [{relevant hint, e.g., project name}]
+---
+
+Run the {pipeline display name} pipeline by chaining these skills in sequence:
+
+{For each skill in the pipeline's skill chain:}
+1. **{skill-name}** — {skill description from skill-map.md}
+{end for}
+
+Before starting, verify the runtime workspace exists. If not, run the init-workspace skill first.
+
+After each pipeline step, pause and present results to the user for validation before proceeding. The user may adjust or skip steps as needed.
+```
+
+If a command file already exists at that path, do not overwrite.
+
 ## Step 5: Generate Commands
 
 For each user-invocable skill, create a command file **in the target plugin directory**:
@@ -240,12 +413,28 @@ Implementation ({target_dir}/):
     {skill-a}.md
     {skill-b}.md
 
+Trait-driven outputs:
+  {if stateful}
+  skills/init-workspace/SKILL.md  — runtime workspace initialization
+  commands/init-workspace.md
+  templates/runtime-config.yaml.tmpl
+  templates/runtime-status.json.tmpl
+  {end if}
+  {if hil-gated}
+  Approval Gate sections injected into: {list of skills with HIL}
+  {end if}
+  {if multi-pipeline}
+  commands/
+    {pipeline-1}.md             — pipeline orchestration
+    {pipeline-2}.md
+  {end if}
+
 Warnings:
   - Existing SKILL.md files were preserved and not overwritten
   - Existing commands were preserved in modify mode
 
 Next steps:
-  Confirm the build stage so Astra Studio can invoke skill-creator in {target_dir}/
+  Confirm the build stage so Astra Studio can generate initial skill drafts in {target_dir}/
   Run /studio-quality:wire-mcp {target_dir} if MCP servers are needed
   Run /studio-quality:validate {target_dir} when all skills are ready
 ```

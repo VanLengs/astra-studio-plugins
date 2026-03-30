@@ -19,13 +19,25 @@ Consult `${CLAUDE_SKILL_DIR}/../../references/plugin-architecture-guide.md` for 
 4. Read `${CLAUDE_SKILL_DIR}/../../agents/architect.md` — the architect perspective leads this step.
 5. **Detect mode**: Read `studio/changes/{domain}/status.json`. If `plugins` list is non-empty → **Incremental mode**: compare updated event clusters against existing plugins. Otherwise → **Initial mode**: all candidates are `create`.
 
+## Execution Depth
+
+Before starting, ask the user which analysis depth they prefer:
+
+> **选择分析深度：**
+> - **🔍 完整分析**（默认）— 包含领域画布、行为矩阵、机会评估，适合事件 > 15 个或预期多插件的场景
+> - **⚡ 快速模式** — 跳过 Step 2、3、5，从事件聚类直接到插件提案，适合简单的单插件场景
+>
+> 完整分析产出更丰富的设计文档，但耗时更长。快速模式跳过的分析可以后续按需单独运行。
+
+If the user chooses fast mode, skip Steps 2, 3, and 5. The skipped insight tools remain available as standalone commands (`/studio-insight:domain-canvas`, `/studio-insight:behavior-matrix`, `/studio-insight:opportunity-brief`) that the user can invoke at any time.
+
 ## Workflow
 
 1. **Cluster events** — group related events into business domains
-2. **Build domain canvas** — invoke `studio-insight:domain-canvas` to define boundaries, classify, and map relationships
-3. **Build behavior matrix** — invoke `studio-insight:behavior-matrix` to cross-reference actors, actions, events, and data
+2. **Build domain canvas** _(full analysis mode only)_ — invoke `studio-insight:domain-canvas` to define boundaries, classify, and map relationships
+3. **Build behavior matrix** _(full analysis mode only)_ — invoke `studio-insight:behavior-matrix` to cross-reference actors, actions, events, and data
 4. **Propose plugins** — translate domains into plugin candidates
-5. **Assess opportunities** — invoke `studio-insight:opportunity-brief` to prioritize
+5. **Assess opportunities** _(full analysis mode only)_ — invoke `studio-insight:opportunity-brief` to prioritize
 6. **Write output** — save domain map to the workspace
 
 ## Step 1: Cluster Events
@@ -40,7 +52,9 @@ Guidelines for clustering:
 
 Present the clusters to the user: "I see these natural groupings — does this match how you think about your business?"
 
-## Step 2: Build Domain Canvas
+## Step 2: Build Domain Canvas (full analysis mode only)
+
+Skip this step in fast mode. The user can run `/studio-insight:domain-canvas` independently later.
 
 Invoke the **studio-insight:domain-canvas** skill with the domain workspace path. Pass:
 - The event clusters from Step 1
@@ -54,7 +68,9 @@ This produces `studio/changes/{domain}/domain-canvas.md` with:
 
 Present the domain canvas to the user for validation before proceeding.
 
-## Step 3: Build Behavior Matrix
+## Step 3: Build Behavior Matrix (full analysis mode only)
+
+Skip this step in fast mode. The user can run `/studio-insight:behavior-matrix` independently later.
 
 Invoke the **studio-insight:behavior-matrix** skill with the domain workspace path. Pass:
 - The events, personas, and processes from event-storm artifacts
@@ -81,6 +97,7 @@ For each candidate:
 - **Expected skills**: Rough list of capabilities (will be refined in skill-design)
 - **Dependencies**: Which other plugins it depends on
 - **MCP needs**: External services it might need (from generic domain analysis)
+- **Pipelines**: Independent business workflows this plugin serves (e.g., "design pipeline", "review pipeline"). If the plugin has 2+ distinct workflows with different entry points and outputs, list each one. This feeds the `multi-pipeline` trait in skill-design.
 
 ### Incremental mode
 
@@ -112,7 +129,9 @@ Same rules as initial mode:
 - 2-5 related plugins → one collection with clear core
 - Independent plugins in different domains → separate collections
 
-## Step 5: Assess Opportunities
+## Step 5: Assess Opportunities (full analysis mode only)
+
+Skip this step in fast mode. The user can run `/studio-insight:opportunity-brief` independently later.
 
 Invoke the **studio-insight:opportunity-brief** skill with the domain workspace path. Pass:
 - All prior artifacts (event-storm, personas, journeys, domain-canvas, behavior-matrix)
@@ -135,10 +154,16 @@ Write `studio/changes/{name}/domain-map.md`:
 > Date: {YYYY-MM-DD}
 > Iteration: {N}
 
+## Analysis Mode
+{Full analysis / Fast mode}
+
 ## Artifacts
-- Domain Canvas: see `domain-canvas.md`
-- Behavior Matrix: see `behavior-matrix.md`
-- Opportunity Brief: see `opportunity-brief.md`
+{Only list artifacts that were actually produced in this run}
+- Domain Canvas: see `domain-canvas.md` _(full analysis only)_
+- Behavior Matrix: see `behavior-matrix.md` _(full analysis only)_
+- Opportunity Brief: see `opportunity-brief.md` _(full analysis only)_
+
+{In fast mode, note: "Run /studio-insight:domain-canvas, /studio-insight:behavior-matrix, /studio-insight:opportunity-brief to produce these artifacts on demand."}
 
 ## Plugin Candidates
 

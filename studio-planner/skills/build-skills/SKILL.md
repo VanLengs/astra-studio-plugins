@@ -1,6 +1,6 @@
 ---
 name: build-skills
-description: Build or update plugin skills in the target plugin directory after spec generation. Use when the user has confirmed the build stage and Astra Studio should automatically invoke skill-creator for new or modified skills. Works for both create and modify iterations.
+description: Generate initial skill implementations in the target plugin directory after spec generation. Produces working first drafts that need iterative refinement through testing and skill-creator. Use when the user has confirmed the build stage. Works for both create and modify iterations.
 allowed-tools: Read, Write, Glob, Grep, Agent
 user-invocable: true
 ---
@@ -13,7 +13,21 @@ This stage is responsible for automatic skill construction. Users confirm entry 
 
 ## Purpose
 
-Take a plugin workspace in `studio/changes/{plugin}/` plus the implementation files in `{target_dir}/`, determine which skills need work in this iteration, and use `skill-creator` as an internal build capability to update them in place.
+Take a plugin workspace in `studio/changes/{plugin}/` plus the implementation files in `{target_dir}/`, determine which skills need work in this iteration, and use `skill-creator` as an internal build capability to produce initial implementations.
+
+### Initial Fill, Not Final Build
+
+This stage produces **"scaffolding with substance"** — skill implementations that are complete enough to test but not yet production-ready. Think of it as a working first draft:
+
+| What the initial fill provides | What iterative refinement adds |
+|-------------------------------|-------------------------------|
+| Correct structure and flow | Edge case handling |
+| Core workflow steps | Real-world tested prompts |
+| Input/output contracts | Polished user-facing messages |
+| Basic precondition checks | Domain-specific quality rules |
+| Placeholder examples | Validated examples from actual usage |
+
+Users should test each skill with 2-3 real scenarios and iterate with `skill-creator` before proceeding to validation. This is the normal and expected workflow — not a sign that build failed.
 
 ## Pre-check
 
@@ -83,8 +97,8 @@ Keep the plugin `phase` as `building` during this stage.
 If all in-scope skills were built successfully:
 
 - Keep plugin `phase` as `building`
-- Tell the user the build stage is complete
-- Suggest proceeding directly to `/studio-quality:validate {target_dir}`
+- Tell the user: "Initial skill implementations are ready. These are working first drafts — test each skill with real inputs and iterate with skill-creator before validation."
+- Suggest: "When skills are refined and tested, run `/studio-quality:validate {target_dir}`"
 
 If any in-scope skill fails:
 
@@ -113,5 +127,14 @@ Skipped:
   - {unchanged-skill-d}
 
 Next step:
-  Run /studio-quality:validate {target_dir}
+  Test each skill with 2-3 real scenarios, then iterate with skill-creator
+  When refined: /studio-quality:validate {target_dir}
+
+Refinement tips:
+  - Test skills with real inputs, not just placeholders
+  - Use skill-creator to iterate on specific skills that need improvement
+  - Watch for edge cases: empty inputs, missing preconditions, large data sets
+  - If the plugin is hil-gated, test approval flows with realistic review scenarios
+  - If the plugin is stateful, verify workspace init and status tracking work end-to-end
+  - If the plugin is multi-pipeline, test each pipeline independently and with shared skills
 ```
