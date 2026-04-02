@@ -1,0 +1,201 @@
+name: preliminary-design
+display_name: "初步设计"
+version: "1.0"
+lifecycle_stage: design
+description: "基于可行性研究报告的初步设计方案，细化系统架构、功能模块、数据库和接口设计"
+
+inherits_from:
+  - "feasibility-study"
+
+structure:
+  - chapter: "一、设计概述"
+    required: true
+    sections:
+      - "设计依据"
+      - "设计范围"
+      - "设计目标"
+      - "与可行性研究报告的衔接说明"
+    artifact_sources:
+      - "brief.md"
+    word_count: "2000-3000"
+    guidelines: "设计依据需引用可研批复文件和相关标准规范。衔接说明需对照可研报告中的建设内容，说明本次设计的范围调整和深化方向，确保设计与可研方案一致性。"
+
+  - chapter: "二、系统总体设计"
+    required: true
+    sections:
+      - "设计原则"
+      - "总体架构设计"
+      - "技术路线选择"
+      - "标准规范体系"
+    artifact_sources:
+      - "domain-model.md"
+      - "domain-canvas.md"
+      - "skill-design.md"
+    word_count: "4000-6000"
+    guidelines: "在可研方案基础上进一步细化总体架构，使用mermaid绘制分层架构图。技术路线明确具体产品和版本选型，标准规范体系列出需遵循的国标、行标和企标。设计原则需具体化，避免笼统表述。"
+
+  - chapter: "三、基础设施设计"
+    required: true
+    sections:
+      - "网络架构设计"
+      - "服务器配置方案"
+      - "存储方案设计"
+      - "政务云资源规划"
+    artifact_sources:
+      - "domain-model.md"
+    word_count: "3000-5000"
+    guidelines: "网络架构需绘制详细拓扑图，标注安全域划分和访问控制策略。服务器配置给出具体型号和参数需求，存储方案说明容量规划和扩展策略。政务云部署需说明资源申请规格和弹性扩展方案。"
+
+  - chapter: "四、应用系统设计"
+    required: true
+    sections:
+      - "模块划分与功能列表"
+      - "用例说明"
+      - "界面原型描述"
+    artifact_sources:
+      - "skill-design.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+      - "journey-map.md"
+    word_count: "8000-12000"
+    guidelines: "按模块逐一给出详细功能设计，每个模块包含功能列表、核心用例说明和关键页面原型描述。用例说明需含前置条件、基本流程、备选流程和后置条件。此章节是初步设计中最详尽的部分。"
+
+  - chapter: "五、数据库设计"
+    required: true
+    sections:
+      - "数据模型ER图"
+      - "核心表结构设计"
+      - "数据字典"
+      - "数据迁移方案"
+    artifact_sources:
+      - "domain-model.md"
+      - "behavior-matrix.md"
+    word_count: "4000-6000"
+    guidelines: "数据模型使用mermaid ER图展示核心实体及关系。核心表结构列出主要字段、类型和约束。数据字典需完整定义业务数据项的含义和取值范围。数据迁移方案说明历史数据的清洗、转换和导入策略。"
+
+  - chapter: "六、接口设计"
+    required: true
+    sections:
+      - "内部模块接口"
+      - "外部系统接口"
+      - "API规范说明"
+      - "数据交换标准"
+    artifact_sources:
+      - "skill-design.md"
+      - "domain-canvas.md"
+    word_count: "3000-5000"
+    guidelines: "接口设计需明确每个接口的名称、协议、请求参数、响应格式和错误码。API规范统一使用RESTful或其他约定风格，给出接口文档示例。外部接口需说明对接系统、对接方式和联调计划。"
+
+  - chapter: "七、信息安全设计"
+    required: true
+    sections:
+      - "安全架构设计"
+      - "等级保护设计"
+      - "身份认证与访问控制"
+      - "数据加密方案"
+      - "审计日志设计"
+    artifact_sources:
+      - "domain-model.md"
+    word_count: "3000-5000"
+    guidelines: "安全设计需对标等保2.0三级具体技术要求逐条设计。身份认证说明统一认证方案（如对接政务身份认证平台），数据加密覆盖传输加密和存储加密。审计日志设计需满足6个月留存要求。"
+
+  - chapter: "八、运维设计"
+    required: true
+    sections:
+      - "监控方案设计"
+      - "备份恢复策略"
+      - "升级更新策略"
+      - "运维管理制度"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "2000-3000"
+    guidelines: "监控方案覆盖基础设施监控、应用性能监控和业务指标监控三个层面。备份恢复策略明确RPO和RTO指标。运维管理制度包含日常巡检、变更管理、故障处理等流程规范。"
+
+  - chapter: "九、实施方案"
+    required: true
+    sections:
+      - "实施策略与方法"
+      - "阶段划分"
+      - "里程碑计划"
+      - "验收标准"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "2500-4000"
+    guidelines: "实施方案采用分阶段迭代策略，明确每个阶段的交付物和验收节点。里程碑计划以甘特图呈现，验收标准需量化可测。建议包含试点上线和推广上线两个阶段。"
+
+  - chapter: "十、培训方案"
+    required: true
+    sections:
+      - "培训对象分析"
+      - "培训内容设计"
+      - "培训方式与计划"
+    artifact_sources:
+      - "persona-insight.md"
+    word_count: "1500-2500"
+    guidelines: "按角色分类设计差异化培训方案（管理员培训、操作员培训、领导驾驶舱培训等）。培训方式包含集中培训、在线学习和操作手册。培训计划与系统上线时间衔接。"
+
+  - chapter: "十一、投资概算"
+    required: true
+    sections:
+      - "硬件投资明细"
+      - "软件投资明细"
+      - "安全投资明细"
+      - "服务投资明细"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "2000-3000"
+    guidelines: "投资概算需比可研阶段更加精确，细化到具体设备型号和软件模块级别。每个分项列出单价、数量和小计，汇总表与可研批复金额对照。偏差部分需说明原因。"
+
+  - chapter: "附录"
+    required: true
+    sections:
+      - "数据字典"
+      - "接口清单"
+      - "部署拓扑图"
+      - "原型截图"
+    artifact_sources:
+      - "domain-model.md"
+      - "skill-design.md"
+    word_count: "3000-6000"
+    guidelines: "附录收录正文中引用的详细技术资料，包括完整数据字典、全量接口清单、物理部署拓扑图和关键页面原型截图。数据字典按模块组织，接口清单包含完整参数说明。"
+
+compliance:
+  - "架构图必须完整覆盖：总体架构图、网络架构图、部署架构图、安全架构图"
+  - "必须包含数据库ER图（mermaid格式）"
+  - "接口设计需有完整API规范说明（含请求/响应示例）"
+  - "安全设计需逐条对标等保2.0三级技术要求"
+  - "投资概算需细化到具体设备/软件模块级别"
+  - "与可行性研究报告的衔接说明不可缺少"
+  - "数据字典需完整覆盖核心业务实体"
+
+style_rules:
+  numbering: "一→（一）→1.→（1）→1）"
+  paragraph_length: "200-400字"
+  tone: "formal-government"
+  required_elements:
+    - "mermaid总体架构图"
+    - "mermaid网络拓扑图"
+    - "mermaid数据库ER图"
+    - "mermaid部署架构图"
+    - "接口规范表格"
+    - "投资概算分项表"
+    - "设备配置清单表"
+    - "实施进度甘特图"
+
+export:
+  page_size: A4
+  margins:
+    top: 2.54cm
+    bottom: 2.54cm
+    left: 3.17cm
+    right: 3.17cm
+  fonts:
+    title: { name: "方正小标宋简体", size: 26pt }
+    heading1: { name: "方正小标宋简体", size: 22pt }
+    heading2: { name: "黑体", size: 16pt }
+    heading3: { name: "楷体", size: 15pt }
+    body: { name: "仿宋", size: 14pt }
+    table: { name: "仿宋", size: 12pt }
+  line_spacing: 1.5
+  header: "初步设计"
+  footer: "page_number"

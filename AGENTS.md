@@ -9,6 +9,7 @@ This is a marketplace of Claude Code plugins for plugin development workflows. E
 ├── studio-insight/      # Business analysis toolkit (personas, journeys, processes, domains) — 6 skills
 ├── studio-planner/      # Planning pipeline (event-storm, domain-model, skill-design, spec-generate, build-skills) — 5 skills
 ├── studio-quality/      # Quality assurance (plugin validation, MCP wiring) — 2 skills
+├── studio-docs/         # Document delivery suite (blueprints, writing experts, parallel generation, export) — 6 skills
 ```
 
 ## Plugin Dependencies
@@ -18,6 +19,7 @@ studio-core      (zero deps)
 studio-insight   (zero deps)
 studio-planner   (depends on studio-core + studio-insight)
 studio-quality   (zero deps)
+studio-docs      (depends on studio-core; consumes artifacts from studio-planner + studio-insight)
 ```
 
 ## Plugin Structure
@@ -38,7 +40,7 @@ plugin-name/
 
 ## Key Files
 
-- `.claude-plugin/marketplace.json`: Marketplace manifest — registers all 4 plugins with source paths
+- `.claude-plugin/marketplace.json`: Marketplace manifest — registers all 5 plugins with source paths
 - `.claude-plugin/plugin.json`: Root-level marketplace metadata
 - `*/plugin.json`: Per-plugin metadata — name, description, version, dependencies
 - `commands/*.md`: Slash commands invoked as `/plugin:command-name`
@@ -72,7 +74,7 @@ All 6 insight skills use **dynamic expert discovery** — they scan for relevant
 8. **Plugin traits**: skill-design detects cross-cutting characteristics (stateful, hil-gated, kb-dependent, multi-pipeline, expert-scoped) that drive conditional scaffolding in spec-generate
 9. **Runtime workspace convention**: Stateful plugins get `.{plugin-name}/` runtime workspace scaffolding — separate from `studio/` which serves plugin development
 10. **Initial fill, not final build**: build-skills produces working first drafts; users iterate with skill-creator before validation
-11. **Versioned promotion**: promote creates versioned milestones (v0.1 → v0.2); design docs are snapshotted to archive but stay active for continued iteration
+11. **Versioned promotion**: promote creates versioned milestones (v0.1 -> v0.2); design docs are snapshotted to archive but stay active for continued iteration
 
 ## Planning Pipeline
 
@@ -95,4 +97,4 @@ build-skills → initial drafts via skill-creator (test & iterate before validat
 1. Edit SKILL.md files directly — changes take effect immediately when loaded via `--plugin-dir`
 2. Test commands with `/plugin:command-name` syntax (e.g., `/studio-core:init`)
 3. Skills trigger automatically when their description matches user intent
-4. Test locally: `claude --plugin-dir ./studio-core --plugin-dir ./studio-insight --plugin-dir ./studio-planner --plugin-dir ./studio-quality`
+4. Test locally: `claude --plugin-dir ./studio-core --plugin-dir ./studio-insight --plugin-dir ./studio-planner --plugin-dir ./studio-quality --plugin-dir ./studio-docs`

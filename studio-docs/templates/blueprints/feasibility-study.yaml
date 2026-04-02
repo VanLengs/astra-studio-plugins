@@ -1,0 +1,214 @@
+name: feasibility-study
+display_name: "可行性研究报告"
+version: "1.0"
+lifecycle_stage: justification
+description: "依据《国家电子政务工程建设项目管理暂行办法》编制的可行性研究报告，全面论证项目技术、经济和社会可行性"
+
+inherits_from:
+  - "project-proposal"
+
+structure:
+  - chapter: "一、总论"
+    required: true
+    sections:
+      - "编制依据"
+      - "研究范围"
+      - "研究结论"
+    artifact_sources:
+      - "brief.md"
+    word_count: "2000-3000"
+    guidelines: "总论是全文的提纲挈领，编制依据需列出所有政策文件和上级批复。研究范围明确本次可研覆盖的系统边界。研究结论应简明扼要给出可行性判断，包括技术可行、经济合理、社会必要三个维度结论。"
+
+  - chapter: "二、项目建设背景与现状"
+    required: true
+    sections:
+      - "宏观政策背景"
+      - "行业发展现状"
+      - "信息化建设现状"
+      - "存在的主要问题"
+    artifact_sources:
+      - "event-storm.md"
+      - "persona-insight.md"
+      - "journey-map.md"
+    word_count: "4000-6000"
+    guidelines: "从宏观到微观层层递进，政策背景引用国家战略和行业规划，现状分析需有实际调研数据支撑。存在问题部分要具体、客观，避免泛泛而谈，每个问题配以实际案例或数据佐证。"
+
+  - chapter: "三、需求分析"
+    required: true
+    sections:
+      - "业务需求分析"
+      - "功能需求分析"
+      - "性能需求分析"
+      - "安全需求分析"
+      - "数据需求分析"
+    artifact_sources:
+      - "persona-insight.md"
+      - "journey-map.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+      - "domain-model.md"
+    word_count: "5000-8000"
+    guidelines: "需求分析是可研报告的核心章节之一，必须覆盖业务、功能、性能、安全、数据五类需求。业务需求从用户视角出发，功能需求细化到模块级，性能需求给出具体指标（并发、响应时间等），安全需求对标等保标准，数据需求明确数据来源和治理要求。"
+
+  - chapter: "四、总体建设方案"
+    required: true
+    sections:
+      - "设计原则"
+      - "总体架构设计"
+      - "技术架构设计"
+      - "数据架构设计"
+      - "网络架构设计"
+      - "安全架构设计"
+    artifact_sources:
+      - "domain-model.md"
+      - "skill-design.md"
+      - "domain-canvas.md"
+    word_count: "5000-8000"
+    guidelines: "总体方案需包含完整的五层架构设计，每层架构配以mermaid架构图。设计原则应涵盖先进性、实用性、安全性、可扩展性等。技术选型需说明理由，建议包含方案比选分析。数据架构需展示核心数据流转关系。"
+
+  - chapter: "五、建设内容"
+    required: true
+    sections:
+      - "子系统/模块详细功能设计"
+      - "接口设计"
+      - "数据库设计"
+    artifact_sources:
+      - "skill-design.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+      - "domain-model.md"
+    word_count: "8000-15000"
+    guidelines: "按模块逐一详述建设内容，每个模块包含功能描述、业务流程、核心功能点、数据流说明。接口设计说明系统间交互方式和数据格式。数据库设计给出核心实体关系和数据字典，此章节是可研中篇幅最大的部分。"
+
+  - chapter: "六、项目招标方案"
+    required: true
+    sections:
+      - "标段划分"
+      - "招标方式"
+      - "投标人资质要求"
+    artifact_sources: []
+    word_count: "1500-2500"
+    guidelines: "根据项目规模和特点合理划分标段，说明采用公开招标或其他方式的理由。资质要求需合法合规，不得设置排他性条款。招标方案需符合《政府采购法》和《招标投标法》要求。"
+
+  - chapter: "七、环保与节能方案"
+    required: true
+    sections:
+      - "环保措施"
+      - "节能方案"
+      - "绿色采购要求"
+    artifact_sources: []
+    word_count: "1000-2000"
+    guidelines: "说明项目建设和运行过程中的环保节能措施，包括机房能耗控制、绿色数据中心建设、电子废弃物处理等。政务云部署项目需说明云资源利用率优化策略。"
+
+  - chapter: "八、项目组织管理"
+    required: true
+    sections:
+      - "项目组织架构"
+      - "人员配置方案"
+      - "进度计划"
+      - "质量保障措施"
+      - "变更管理机制"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "3000-5000"
+    guidelines: "组织架构需明确项目领导小组、项目办公室、监理方等各方职责。进度计划以甘特图呈现，标注关键里程碑和关键路径。质量保障涵盖过程质量和交付质量，变更管理需建立分级审批机制。"
+
+  - chapter: "九、信息安全方案"
+    required: true
+    sections:
+      - "等级保护要求"
+      - "安全架构设计"
+      - "数据安全保护"
+      - "应急预案"
+    artifact_sources:
+      - "domain-model.md"
+    word_count: "3000-5000"
+    guidelines: "信息安全方案需对标等保2.0具体要求，明确系统定级（通常三级）。安全架构覆盖物理安全、网络安全、主机安全、应用安全、数据安全五个层面。应急预案需包含灾备策略和应急响应流程。"
+
+  - chapter: "十、投资估算与资金来源"
+    required: true
+    sections:
+      - "分项投资估算表"
+      - "年度投资计划"
+      - "资金来源说明"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "2000-3000"
+    guidelines: "投资估算需精确到万元级别，按硬件、软件、安全、网络、集成、监理、培训等分项编制。年度投资计划与进度计划衔接，资金来源需注明财政预算科目。建议附详细估算表格。"
+
+  - chapter: "十一、效益分析"
+    required: true
+    sections:
+      - "经济效益分析"
+      - "社会效益分析"
+      - "敏感性分析"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "2500-4000"
+    guidelines: "经济效益需有具体的成本节约和效率提升测算，社会效益从公共服务改善角度量化分析。敏感性分析考虑投资超支、工期延长、需求变更等因素对效益的影响。建议使用表格和图表展示分析结果。"
+
+  - chapter: "十二、风险分析"
+    required: true
+    sections:
+      - "技术风险分析"
+      - "管理风险分析"
+      - "市场风险分析"
+      - "风险应对措施"
+    artifact_sources: []
+    word_count: "2000-3000"
+    guidelines: "系统识别项目面临的各类风险，按风险发生概率和影响程度进行评估分级。每个风险需有对应的预防措施和应急方案。建议使用风险矩阵表格呈现风险等级。"
+
+  - chapter: "附录"
+    required: true
+    sections:
+      - "政策文件清单"
+      - "术语表与缩略语"
+      - "核心数据实体清单"
+      - "调研材料汇编"
+    artifact_sources:
+      - "event-storm.md"
+      - "domain-model.md"
+    word_count: "2000-4000"
+    guidelines: "附录收录正文引用的政策文件完整清单、专业术语解释、数据实体定义、调研问卷和访谈记录等支撑材料。政策文件按发文机关和时间排序。"
+
+compliance:
+  - "必须包含方案比选分析（至少2个技术方案对比，含优劣分析和推荐结论）"
+  - "投资估算必须精确到万元，含分项估算表"
+  - "必须包含社会稳定风险分析内容"
+  - "必须明确等保安全等级并说明定级依据"
+  - "必须包含节能方案和绿色采购相关内容"
+  - "引用不少于5项国家/地方政策文件"
+  - "需求分析须覆盖五类需求（业务/功能/性能/安全/数据）"
+  - "架构设计须包含总体架构、技术架构、数据架构、网络架构、安全架构"
+
+style_rules:
+  numbering: "一→（一）→1.→（1）→1）"
+  paragraph_length: "200-400字"
+  tone: "formal-government"
+  required_elements:
+    - "mermaid总体架构图"
+    - "mermaid技术架构图"
+    - "mermaid数据流图"
+    - "方案比选对比表"
+    - "投资估算分项表"
+    - "进度计划甘特图"
+    - "风险矩阵表格"
+    - "量化效益指标"
+
+export:
+  page_size: A4
+  margins:
+    top: 2.54cm
+    bottom: 2.54cm
+    left: 3.17cm
+    right: 3.17cm
+  fonts:
+    title: { name: "方正小标宋简体", size: 26pt }
+    heading1: { name: "方正小标宋简体", size: 22pt }
+    heading2: { name: "黑体", size: 16pt }
+    heading3: { name: "楷体", size: 15pt }
+    body: { name: "仿宋", size: 14pt }
+    table: { name: "仿宋", size: 12pt }
+  line_spacing: 1.5
+  header: "可行性研究报告"
+  footer: "page_number"

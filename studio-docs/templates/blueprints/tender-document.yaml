@@ -1,0 +1,145 @@
+name: tender-document
+display_name: "招标文件"
+version: "1.0"
+lifecycle_stage: procurement
+description: "依据《政府采购法》《招标投标法》编制的招标文件，规范采购流程和技术商务要求"
+
+inherits_from:
+  - "feasibility-study"
+  - "preliminary-design"
+
+structure:
+  - chapter: "第一章 投标邀请"
+    required: true
+    sections:
+      - "项目名称与编号"
+      - "采购人信息"
+      - "采购代理机构信息"
+      - "预算金额"
+      - "采购方式声明"
+    artifact_sources:
+      - "brief.md"
+    word_count: "1000-1500"
+    guidelines: "投标邀请需规范完整，项目名称与编号须与采购计划一致。预算金额需标注资金来源，采购方式须声明为公开招标、邀请招标或竞争性谈判，并说明依据。"
+
+  - chapter: "第二章 投标人须知"
+    required: true
+    sections:
+      - "投标条件与要求"
+      - "时间安排（获取文件、答疑、截止、开标）"
+      - "答疑与澄清"
+      - "开标地点与流程"
+      - "投标保证金"
+    artifact_sources: []
+    word_count: "3000-5000"
+    guidelines: "投标人须知是投标人参与采购的操作指南，时间节点须明确具体日期。答疑规则、投标保证金缴退、废标条款等需严格依据政府采购法规定。语言必须严谨准确，不留歧义。"
+
+  - chapter: "第三章 资格条件与评审标准"
+    required: true
+    sections:
+      - "投标人资质要求"
+      - "评审方法说明"
+      - "评分细则表"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "3000-5000"
+    guidelines: "资质要求须合法合规，不得设置对特定供应商的歧视性条款。评审方法明确采用综合评分法或最低评标价法。评分细则表须列出技术分、商务分、价格分及各子项分值和评分标准，总分100分。"
+
+  - chapter: "第四章 技术需求与服务要求"
+    required: true
+    sections:
+      - "系统功能需求"
+      - "性能指标要求"
+      - "安全要求"
+      - "技术标准与规范"
+      - "交付要求与验收标准"
+      - "售后服务要求"
+    artifact_sources:
+      - "skill-design.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+      - "domain-model.md"
+    word_count: "8000-12000"
+    guidelines: "技术需求是招标文件的核心章节，需完整准确地转化可研和初设中的功能需求。性能指标需明确量化（响应时间、并发量、可用性等），安全要求对标等保等级。每项需求须编号，以便投标人逐条响应。"
+
+  - chapter: "第五章 商务条件"
+    required: true
+    sections:
+      - "合同签订要求"
+      - "付款方式与条件"
+      - "违约责任条款"
+      - "知识产权归属"
+      - "保密条款"
+    artifact_sources: []
+    word_count: "2500-4000"
+    guidelines: "付款方式须符合政府采购法规，通常按里程碑分期支付（预付款≤30%）。知识产权归属须明确约定源代码和文档归采购人所有。违约条款和保密条款须双向对等，保护双方合法权益。"
+
+  - chapter: "第六章 投标文件格式要求"
+    required: true
+    sections:
+      - "法定代表人授权书格式"
+      - "投标函格式"
+      - "技术方案格式要求"
+      - "报价表格式"
+      - "业绩证明格式"
+    artifact_sources: []
+    word_count: "2000-3000"
+    guidelines: "提供标准化的投标文件格式模板，确保各投标人提交文件的一致性和可比性。格式要求须详尽清晰，减少因格式问题导致的废标风险。报价表格式需与技术需求条目对应。"
+
+  - chapter: "第七章 合同条款"
+    required: true
+    sections:
+      - "政府采购合同范本"
+    artifact_sources: []
+    word_count: "3000-5000"
+    guidelines: "采用政府采购标准合同范本，涵盖合同标的、金额、履行期限、验收、付款、违约、争议解决等核心条款。合同范本须与商务条件章节一致，不得相互矛盾。"
+
+  - chapter: "附件"
+    required: true
+    sections:
+      - "需求响应表模板"
+      - "设备清单模板"
+      - "项目实施计划模板"
+    artifact_sources:
+      - "skill-design.md"
+    word_count: "1500-2500"
+    guidelines: "附件提供投标人必须填写的标准化模板，需求响应表须与第四章技术需求逐条对应，设备清单模板包含品牌型号列和配置参数列。实施计划模板明确里程碑节点要求。"
+
+compliance:
+  - "评分标准必须完整（技术分/商务分/价格分比例清晰，总分100分）"
+  - "资质要求不得含有指向特定供应商的排他性条款"
+  - "付款条件须符合政府采购法规（预付款不超过30%）"
+  - "必须包含标准化的投标文件格式模板"
+  - "须明确声明采购方式（公开招标/邀请招标/竞争性谈判）及法律依据"
+  - "技术需求须逐条编号，便于响应对照"
+  - "知识产权归属须明确约定"
+
+style_rules:
+  numbering: "第X章→X.X→X.X.X"
+  paragraph_length: "200-400字"
+  tone: "formal-legal"
+  required_elements:
+    - "评分细则表格"
+    - "需求响应表模板"
+    - "报价表模板"
+    - "设备清单模板"
+    - "合同条款范本"
+    - "投标文件格式模板"
+
+export:
+  page_size: A4
+  margins:
+    top: 2.54cm
+    bottom: 2.54cm
+    left: 3.17cm
+    right: 3.17cm
+  fonts:
+    title: { name: "方正小标宋简体", size: 26pt }
+    heading1: { name: "方正小标宋简体", size: 22pt }
+    heading2: { name: "黑体", size: 16pt }
+    heading3: { name: "楷体", size: 15pt }
+    body: { name: "仿宋", size: 14pt }
+    table: { name: "仿宋", size: 12pt }
+  line_spacing: 1.5
+  header: "招标文件"
+  footer: "page_number"

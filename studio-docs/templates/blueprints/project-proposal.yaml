@@ -1,0 +1,138 @@
+name: project-proposal
+display_name: "项目建议书"
+version: "1.0"
+lifecycle_stage: initiation
+description: "政府信息化项目立项阶段的项目建议书，阐述项目必要性、初步方案和投资估算"
+
+inherits_from: []
+
+structure:
+  - chapter: "一、项目概述"
+    required: true
+    sections:
+      - "项目名称与编号"
+      - "建设单位及主管部门"
+      - "建设背景"
+      - "建设目标"
+    artifact_sources:
+      - "event-storm.md"
+      - "brief.md"
+    word_count: "2000-3000"
+    guidelines: "简明扼要介绍项目基本信息，建设背景需紧扣国家和地方数字化转型战略。建设目标应分为总体目标和具体目标，具体目标需可量化、可衡量。"
+
+  - chapter: "二、项目建设的必要性"
+    required: true
+    sections:
+      - "政策背景与战略意义"
+      - "业务痛点与现实困境"
+      - "差距分析与对标研究"
+    artifact_sources:
+      - "event-storm.md"
+      - "persona-insight.md"
+      - "journey-map.md"
+    word_count: "3000-5000"
+    guidelines: "必要性论述是项目建议书的核心章节，需从政策要求、业务需求、技术趋势三个维度展开。引用不少于3项国家/地方政策文件，业务痛点需有具体数据支撑，差距分析建议使用对比表格呈现。"
+
+  - chapter: "三、需求分析"
+    required: true
+    sections:
+      - "业务需求概述"
+      - "用户分析"
+      - "功能需求概要"
+    artifact_sources:
+      - "persona-insight.md"
+      - "journey-map.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+    word_count: "3000-4000"
+    guidelines: "概要性描述主要业务需求和用户群体，不需要深入技术细节。用户分析应覆盖各类角色及其核心诉求，功能需求以模块化方式概要列出，为后续可行性研究奠定基础。"
+
+  - chapter: "四、建设方案初步构想"
+    required: true
+    sections:
+      - "总体架构设想"
+      - "主要功能模块"
+      - "技术路线初选"
+    artifact_sources:
+      - "domain-model.md"
+      - "skill-design.md"
+    word_count: "2000-3000"
+    guidelines: "提出初步技术方案构想，总体架构以概念图呈现即可，无需详细设计。功能模块以列表形式概述，技术路线说明选型方向和理由。此阶段方案允许存在多个备选。"
+
+  - chapter: "五、项目建设条件"
+    required: true
+    sections:
+      - "政策支撑条件"
+      - "组织保障条件"
+      - "技术基础条件"
+      - "数据基础条件"
+    artifact_sources:
+      - "event-storm.md"
+    word_count: "2000-3000"
+    guidelines: "客观评估项目实施的基础条件，包括政策环境、组织能力、技术积累和数据资产。需如实反映有利条件和需要补强的短板，为可行性判断提供依据。"
+
+  - chapter: "六、投资估算与资金来源"
+    required: true
+    sections:
+      - "投资概算总额"
+      - "分项估算明细"
+      - "资金来源渠道"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "1500-2500"
+    guidelines: "给出项目投资的初步估算，分为硬件、软件、安全、服务等大类。资金来源需明确是财政拨款、专项资金还是自筹等渠道，估算精度可为±20%。建议使用分项估算表格呈现。"
+
+  - chapter: "七、社会效益与经济效益初步分析"
+    required: true
+    sections:
+      - "社会效益分析"
+      - "经济效益分析"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "1500-2500"
+    guidelines: "效益分析应以定量为主、定性为辅。社会效益可从服务覆盖人群、办事效率提升、群众满意度等维度量化。经济效益需有节约成本、提升效率等具体测算数据。"
+
+  - chapter: "八、结论与建议"
+    required: true
+    sections:
+      - "研究结论"
+      - "推进建议"
+    artifact_sources: []
+    word_count: "800-1200"
+    guidelines: "总结项目建设的必要性和可行性结论，提出下一步推进建议，包括启动可行性研究、落实前期经费等具体建议事项。语言简洁有力，结论明确。"
+
+compliance:
+  - "必须引用不少于3项国家/地方政策文件作为建设依据"
+  - "必须包含投资估算（含分项估算表）"
+  - "必须明确说明资金来源渠道"
+  - "项目必要性论述需有量化数据支撑（现状数据、对比数据）"
+  - "建设目标需包含可量化的具体指标"
+  - "需求分析需覆盖主要用户角色"
+
+style_rules:
+  numbering: "一→（一）→1.→（1）→1）"
+  paragraph_length: "200-400字"
+  tone: "formal-government"
+  required_elements:
+    - "mermaid总体架构概念图"
+    - "政策依据清单表格"
+    - "投资估算分项表格"
+    - "量化效益指标"
+
+export:
+  page_size: A4
+  margins:
+    top: 2.54cm
+    bottom: 2.54cm
+    left: 3.17cm
+    right: 3.17cm
+  fonts:
+    title: { name: "方正小标宋简体", size: 26pt }
+    heading1: { name: "方正小标宋简体", size: 22pt }
+    heading2: { name: "黑体", size: 16pt }
+    heading3: { name: "楷体", size: 15pt }
+    body: { name: "仿宋", size: 14pt }
+    table: { name: "仿宋", size: 12pt }
+  line_spacing: 1.5
+  header: "项目建议书"
+  footer: "page_number"

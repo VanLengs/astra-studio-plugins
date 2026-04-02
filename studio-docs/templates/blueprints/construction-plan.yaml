@@ -1,0 +1,202 @@
+name: construction-plan
+display_name: "建设方案"
+version: "1.0"
+lifecycle_stage: implementation
+description: "项目实施阶段的详细建设方案，融合可研与初设成果，指导具体开发建设工作"
+
+inherits_from:
+  - "feasibility-study"
+  - "preliminary-design"
+
+structure:
+  - chapter: "一、项目概述"
+    required: true
+    sections:
+      - "项目定位"
+      - "建设背景"
+      - "建设目标"
+      - "政策依据"
+      - "建设周期与投资概算"
+    artifact_sources:
+      - "brief.md"
+      - "event-storm.md"
+    word_count: "3000-5000"
+    guidelines: "项目概述需高屋建瓴地介绍项目全貌，项目定位一句话说清本项目的核心价值。建设目标分总体目标和量化指标，政策依据列出核心政策文件。建设周期和投资概算给出总体数字，详细内容在后续章节展开。"
+
+  - chapter: "二、建设必要性与可行性分析"
+    required: true
+    sections:
+      - "政策必要性"
+      - "业务必要性"
+      - "技术必要性"
+      - "社会必要性"
+      - "政策可行性论证"
+      - "技术可行性论证"
+      - "经济可行性论证"
+      - "组织可行性论证"
+    artifact_sources:
+      - "event-storm.md"
+      - "persona-insight.md"
+      - "opportunity-brief.md"
+    word_count: "4000-6000"
+    guidelines: "四大必要性从政策、业务、技术、社会四个维度论证建设迫切性。四大可行性从政策、技术、经济、组织四个维度论证可实现性。每个论点需有政策文件、数据或案例佐证，避免空泛论述。"
+
+  - chapter: "三、现状与需求分析"
+    required: true
+    sections:
+      - "业务现状分析"
+      - "用户画像与痛点分析"
+      - "业务需求分析"
+      - "功能需求分析"
+      - "性能需求分析"
+      - "安全需求分析"
+    artifact_sources:
+      - "persona-insight.md"
+      - "journey-map.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+    word_count: "5000-8000"
+    guidelines: "现状分析基于实际调研数据，用户画像使用persona卡片格式呈现。四维需求分析（业务/功能/性能/安全）逐层深入，业务需求从用户旅程中提取，功能需求映射到系统模块，性能需求量化为具体指标。"
+
+  - chapter: "四、总体设计"
+    required: true
+    sections:
+      - "设计原则"
+      - "总体架构设计"
+      - "业务架构设计"
+      - "数据架构设计"
+      - "技术路线选择"
+      - "部署架构设计"
+      - "标准规范体系"
+    artifact_sources:
+      - "domain-model.md"
+      - "domain-canvas.md"
+      - "skill-design.md"
+    word_count: "5000-8000"
+    guidelines: "总体设计是建设方案的架构纲领，每层架构配mermaid架构图。总体架构展示系统全景分层，业务架构映射业务域与系统域关系，数据架构展示数据流转和存储策略，部署架构说明物理/云部署拓扑。技术路线需对选型做出明确决策。"
+
+  - chapter: "五、平台建设内容"
+    required: true
+    sections:
+      - "模块一：功能架构与详细设计"
+      - "模块二：功能架构与详细设计"
+      - "模块N：功能架构与详细设计"
+      - "各模块核心功能说明"
+      - "各模块数据流设计"
+      - "各模块关键技术方案"
+      - "各模块预期效果"
+    artifact_sources:
+      - "skill-design.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+      - "domain-model.md"
+    word_count: "12000-20000"
+    guidelines: "逐模块展开详细建设内容，每个模块统一包含：mermaid功能架构图、核心功能列表、业务流程说明、数据流说明、关键技术方案、预期效果。模块设计需与总体架构衔接，数据流需与数据架构一致。此章节是建设方案的主体，篇幅最大。"
+
+  - chapter: "六、信息安全与数据合规保障方案"
+    required: true
+    sections:
+      - "安全框架总体设计"
+      - "网络安全方案"
+      - "数据安全方案"
+      - "应用安全方案"
+      - "数据合规方案"
+      - "容灾备份方案"
+    artifact_sources:
+      - "domain-model.md"
+    word_count: "4000-6000"
+    guidelines: "安全方案须满足等保2.0三级要求，从网络、数据、应用三个层面设计安全防护。数据合规方案须覆盖《个人信息保护法》和《数据安全法》的具体要求，建立数据分类分级制度。容灾备份明确RPO和RTO指标。"
+
+  - chapter: "七、项目管理与质量控制方案"
+    required: true
+    sections:
+      - "项目组织架构"
+      - "进度计划甘特图"
+      - "质量管理体系"
+      - "风险管控方案"
+      - "培训方案"
+    artifact_sources:
+      - "process-flow.md"
+      - "persona-insight.md"
+    word_count: "4000-6000"
+    guidelines: "项目管理覆盖组织、进度、质量、风险四个维度。组织架构明确各方职责，进度甘特图标注关键路径和里程碑。质量体系包含评审、测试和验收流程，风险管控建立风险清单和应对预案。培训方案按角色分级设计。"
+
+  - chapter: "八、运维服务与运营支撑方案"
+    required: true
+    sections:
+      - "运维服务体系"
+      - "系统迭代升级机制"
+      - "运营策略规划"
+      - "可持续发展路径"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "3000-5000"
+    guidelines: "运维方案覆盖日常运维、监控告警、故障处理全流程。系统迭代机制说明版本规划和发布流程。运营策略包含用户运营、数据运营和内容运营。可持续发展展望系统中长期演进路径。"
+
+  - chapter: "九、投资概算与效益分析"
+    required: true
+    sections:
+      - "分项投资概算表"
+      - "经济效益分析"
+      - "社会效益分析"
+      - "敏感性分析"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "3000-5000"
+    guidelines: "投资概算精确到模块级，按硬件、软件、安全、集成服务等分项编制表格。经济效益含成本节约和效率提升测算，社会效益量化到服务人数和满意度。敏感性分析含3年ROI测算，考虑投资波动对效益的影响。"
+
+  - chapter: "附录"
+    required: true
+    sections:
+      - "政策文件清单"
+      - "术语表"
+      - "缩略语表"
+    artifact_sources:
+      - "event-storm.md"
+      - "domain-model.md"
+    word_count: "1500-3000"
+    guidelines: "附录收录全文引用的政策文件完整列表（按发文时间排序）、专业术语解释和缩略语对照表，确保文档的完整性和可读性。"
+
+compliance:
+  - "架构图须完整覆盖：总体架构、业务架构、数据架构、部署架构、安全架构"
+  - "每个功能模块须包含mermaid功能架构图"
+  - "安全方案须满足等保2.0三级标准"
+  - "投资概算须精确到模块级（含分项明细表）"
+  - "效益分析须包含3年ROI测算"
+  - "数据合规方案须覆盖《个人信息保护法》和《数据安全法》要求"
+  - "建设必要性须从政策、业务、技术、社会四个维度论证"
+  - "需求分析须覆盖业务、功能、性能、安全四个维度"
+
+style_rules:
+  numbering: "一→（一）→1.→（1）→1）"
+  paragraph_length: "200-400字"
+  tone: "formal-government"
+  required_elements:
+    - "mermaid总体架构图"
+    - "mermaid业务架构图"
+    - "mermaid数据架构图"
+    - "mermaid部署架构图"
+    - "各模块mermaid功能架构图"
+    - "用户画像卡片"
+    - "投资概算分项表"
+    - "进度甘特图"
+    - "风险矩阵表"
+    - "ROI测算表"
+
+export:
+  page_size: A4
+  margins:
+    top: 2.54cm
+    bottom: 2.54cm
+    left: 3.17cm
+    right: 3.17cm
+  fonts:
+    title: { name: "方正小标宋简体", size: 26pt }
+    heading1: { name: "方正小标宋简体", size: 22pt }
+    heading2: { name: "黑体", size: 16pt }
+    heading3: { name: "楷体", size: 15pt }
+    body: { name: "仿宋", size: 14pt }
+    table: { name: "仿宋", size: 12pt }
+  line_spacing: 1.5
+  header: "建设方案"
+  footer: "page_number"

@@ -1,0 +1,162 @@
+name: acceptance-package
+display_name: "项目验收材料"
+version: "1.0"
+lifecycle_stage: delivery
+description: "政府信息化项目验收阶段的全套验收材料，确保交付成果满足合同和招标文件全部要求"
+
+inherits_from:
+  - "construction-plan"
+  - "tender-document"
+
+structure:
+  - chapter: "第一部分 验收申请报告"
+    required: true
+    sections:
+      - "项目概况"
+      - "项目完成情况总述"
+      - "验收申请"
+    artifact_sources:
+      - "brief.md"
+    word_count: "2000-3000"
+    guidelines: "验收申请报告是启动验收的正式文件，项目概况简述项目基本信息和合同要求。完成情况总述概要说明建设成果和关键指标达成情况。验收申请明确提出验收请求并附验收条件说明。"
+
+  - chapter: "第二部分 项目建设总结报告"
+    required: true
+    sections:
+      - "建设历程回顾"
+      - "里程碑达成情况"
+      - "关键决策记录"
+      - "经验教训总结"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "3000-5000"
+    guidelines: "总结报告客观回顾项目建设全过程，里程碑达成以表格形式对比计划与实际时间。关键决策记录需方案变更和技术选型的重要节点。经验教训从管理和技术两个维度总结，为后续项目提供参考。"
+
+  - chapter: "第三部分 系统功能清单与完成情况"
+    required: true
+    sections:
+      - "需求跟踪矩阵（招标需求→功能模块→测试用例→完成状态）"
+    artifact_sources:
+      - "skill-design.md"
+      - "behavior-matrix.md"
+    word_count: "3000-6000"
+    guidelines: "需求跟踪矩阵是验收的核心依据，须逐条对照招标文件技术需求，映射到已实现的功能模块和对应测试用例，标注完成状态。矩阵须100%覆盖招标文件所有技术需求条目，使用大表格呈现。"
+
+  - chapter: "第四部分 系统测试报告"
+    required: true
+    sections:
+      - "测试计划概述"
+      - "功能测试报告"
+      - "性能测试报告"
+      - "安全测试报告"
+      - "兼容性测试报告"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "5000-8000"
+    guidelines: "测试报告须覆盖功能、性能、安全、兼容性四个维度。每个维度含测试范围、测试方法、测试结果和缺陷统计。功能测试通过率须≥98%，P1缺陷须全部归零。性能测试需附压测数据和曲线图。安全测试对标等保要求。"
+
+  - chapter: "第五部分 等保测评报告"
+    required: true
+    sections:
+      - "等保备案证明"
+      - "测评结论"
+      - "问题整改情况"
+    artifact_sources: []
+    word_count: "1500-3000"
+    guidelines: "等保测评报告引用第三方测评机构的正式报告结论。备案证明附公安机关出具的等保备案证书。测评中发现的问题须逐条列出整改措施和整改完成情况，确保全部整改闭环。"
+
+  - chapter: "第六部分 用户培训记录"
+    required: true
+    sections:
+      - "培训计划执行情况"
+      - "培训签到表"
+      - "培训效果评估"
+      - "培训教材清单"
+    artifact_sources:
+      - "persona-insight.md"
+    word_count: "1500-3000"
+    guidelines: "培训记录证明培训工作的完整执行，签到表须包含所有参训人员姓名和签字。培训效果评估通过考试或问卷形式量化。培训教材清单列出所有交付的操作手册和培训课件。培训覆盖率须达100%。"
+
+  - chapter: "第七部分 运维交接文档"
+    required: true
+    sections:
+      - "系统部署手册"
+      - "运维操作手册"
+      - "应急预案手册"
+      - "密码/账号移交清单"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "3000-5000"
+    guidelines: "运维交接确保系统可被采购方独立运维。部署手册含完整环境配置和部署步骤，运维手册含日常巡检和故障处理流程。密码账号移交须在安全环境下执行并签署交接确认单。"
+
+  - chapter: "第八部分 项目文档清单"
+    required: true
+    sections:
+      - "全套项目文档索引"
+    artifact_sources: []
+    word_count: "1000-2000"
+    guidelines: "项目文档清单是全套交付文档的完整索引，按需求文档、设计文档、测试文档、用户手册、运维文档等分类编目。每个文档标注名称、版本、页数和存储位置。须检查文档完整性。"
+
+  - chapter: "第九部分 项目决算报告"
+    required: true
+    sections:
+      - "实际投资与预算对比"
+      - "分项决算明细表"
+      - "审计结论"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "2000-3000"
+    guidelines: "决算报告对比合同金额与实际执行金额，逐项说明偏差原因。分项决算表与招标报价分项对应。审计结论引用审计机构的正式结论。决算总额不得超过合同金额。"
+
+  - chapter: "附件"
+    required: true
+    sections:
+      - "验收签到表"
+      - "验收意见表"
+      - "整改确认表"
+      - "软件著作权证书"
+    artifact_sources: []
+    word_count: "1000-2000"
+    guidelines: "附件收录验收会议的程序性文件和法律性文件。验收签到表记录验收会参会人员，验收意见表由验收专家组逐项评审签字。整改确认表记录遗留问题整改闭环。软件著作权证书证明知识产权合规。"
+
+compliance:
+  - "需求跟踪矩阵须100%覆盖招标文件全部技术需求条目"
+  - "功能测试通过率须≥98%，P1级缺陷须全部归零"
+  - "等保测评须通过（附第三方测评机构正式报告）"
+  - "用户培训覆盖率须达100%（所有目标用户均已参训）"
+  - "文档完整性检查通过（全套项目文档齐全可查）"
+  - "决算金额不得超过合同金额"
+  - "密码账号移交须签署安全交接确认单"
+  - "所有验收问题须整改闭环并经确认"
+
+style_rules:
+  numbering: "第X部分→一→（一）→1.→（1）"
+  paragraph_length: "150-300字"
+  tone: "formal-summary"
+  required_elements:
+    - "需求跟踪矩阵大表"
+    - "测试结果统计表"
+    - "缺陷分布图表"
+    - "培训签到表"
+    - "里程碑对比表"
+    - "决算对比表"
+    - "文档清单索引表"
+    - "验收意见表"
+
+export:
+  page_size: A4
+  margins:
+    top: 2.54cm
+    bottom: 2.54cm
+    left: 3.17cm
+    right: 3.17cm
+  fonts:
+    title: { name: "方正小标宋简体", size: 26pt }
+    heading1: { name: "方正小标宋简体", size: 22pt }
+    heading2: { name: "黑体", size: 16pt }
+    heading3: { name: "楷体", size: 15pt }
+    body: { name: "仿宋", size: 14pt }
+    table: { name: "仿宋", size: 12pt }
+  line_spacing: 1.5
+  header: "项目验收材料"
+  footer: "page_number"

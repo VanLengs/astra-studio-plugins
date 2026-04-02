@@ -1,0 +1,183 @@
+name: bid-document
+display_name: "投标文件"
+version: "1.0"
+lifecycle_stage: response
+description: "响应招标文件的标准投标文件，包含商务文件、技术方案和报价文件三大部分"
+
+inherits_from:
+  - "tender-document"
+
+structure:
+  - chapter: "第一部分 商务文件"
+    required: true
+    sections:
+      - "投标函"
+      - "法定代表人授权书"
+      - "联合体协议（如适用）"
+      - "企业资质文件"
+      - "类似项目业绩证明"
+      - "信用承诺书"
+    artifact_sources:
+      - "brief.md"
+    word_count: "3000-5000"
+    guidelines: "商务文件须严格按照招标文件要求的格式编制。资质文件需完整有效，业绩证明附合同复印件或中标通知书。信用承诺书需涵盖无重大违法记录、无列入失信名单等声明。所有文件须加盖公章。"
+
+  - chapter: "第二部分 技术文件 — 一、项目理解与需求分析"
+    required: true
+    sections:
+      - "对项目背景的理解"
+      - "对业务需求的深入分析"
+      - "核心挑战识别与应对思路"
+    artifact_sources:
+      - "event-storm.md"
+      - "persona-insight.md"
+      - "journey-map.md"
+    word_count: "3000-5000"
+    guidelines: "展示对项目的深入理解和独到见解，不简单复述招标文件内容。需结合行业经验和类似项目实践，分析项目面临的核心挑战和关键成功因素，体现专业能力和项目把控力。"
+
+  - chapter: "第二部分 技术文件 — 二、总体解决方案"
+    required: true
+    sections:
+      - "设计理念与设计原则"
+      - "总体架构设计"
+      - "技术路线选择"
+      - "方案创新亮点"
+    artifact_sources:
+      - "domain-model.md"
+      - "domain-canvas.md"
+      - "skill-design.md"
+    word_count: "4000-6000"
+    guidelines: "总体方案需体现技术先进性和方案成熟度的平衡。架构设计使用mermaid图清晰展示分层架构，技术选型需有理有据。创新亮点重点突出区别于竞争对手的技术优势和方法论优势。"
+
+  - chapter: "第二部分 技术文件 — 三、详细技术方案"
+    required: true
+    sections:
+      - "各功能模块详细设计"
+      - "数据方案设计"
+      - "安全方案设计"
+    artifact_sources:
+      - "skill-design.md"
+      - "behavior-matrix.md"
+      - "process-flow.md"
+      - "domain-model.md"
+    word_count: "10000-18000"
+    guidelines: "逐条响应招标文件技术需求，按模块详细阐述实现方案。每个模块含功能描述、技术实现、界面设计思路和预期效果。数据方案含数据模型和数据治理，安全方案对标等保要求。此章节篇幅最大，需展示扎实的技术功底。"
+
+  - chapter: "第二部分 技术文件 — 四、项目实施方案"
+    required: true
+    sections:
+      - "实施策略与方法论"
+      - "阶段计划与里程碑"
+      - "人员投入计划"
+      - "进度甘特图"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "3000-5000"
+    guidelines: "实施方案需展示成熟的项目管理方法论，阶段划分清晰合理。人员投入计划按角色列出各阶段人员配置，甘特图标注关键里程碑和交付物。体现对项目进度和资源的精准把控。"
+
+  - chapter: "第二部分 技术文件 — 五、质量保证方案"
+    required: true
+    sections:
+      - "质量管理体系"
+      - "测试方案"
+      - "验收标准与流程"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "2500-4000"
+    guidelines: "质量保证方案需展示完善的质量管理体系（如ISO 9001）。测试方案覆盖单元测试、集成测试、系统测试、验收测试全流程。验收标准须与招标文件验收要求一一对应。"
+
+  - chapter: "第二部分 技术文件 — 六、培训方案"
+    required: true
+    sections:
+      - "培训计划与安排"
+      - "培训内容设计"
+      - "培训师资配备"
+    artifact_sources:
+      - "persona-insight.md"
+    word_count: "1500-2500"
+    guidelines: "培训方案需按用户角色差异化设计课程内容，明确培训时间、地点、方式。培训师资需有相关资质和经验。建议包含培训效果评估和后续答疑机制说明。"
+
+  - chapter: "第二部分 技术文件 — 七、运维服务方案"
+    required: true
+    sections:
+      - "运维服务体系"
+      - "SLA服务承诺"
+      - "应急预案"
+    artifact_sources:
+      - "process-flow.md"
+    word_count: "2500-4000"
+    guidelines: "运维服务方案需明确服务范围、服务等级和响应时限。SLA承诺需量化（如系统可用性≥99.9%，故障响应≤30分钟）。应急预案覆盖各类故障场景的处置流程和恢复时间承诺。"
+
+  - chapter: "第二部分 技术文件 — 八、项目组织与人员"
+    required: true
+    sections:
+      - "项目组织架构"
+      - "项目经理简历"
+      - "核心成员简历与资质证书"
+    artifact_sources: []
+    word_count: "3000-5000"
+    guidelines: "组织架构需展示清晰的项目团队层级和职责划分。项目经理和核心成员简历需包含教育背景、资质证书编号、类似项目经验。技术人员须附PMP、信息系统项目管理师等有效证书。"
+
+  - chapter: "第二部分 技术文件 — 九、类似项目业绩"
+    required: true
+    sections:
+      - "案例项目概述"
+      - "合同金额与实施时间"
+      - "项目成果与客户评价"
+      - "客户联系方式"
+    artifact_sources: []
+    word_count: "2000-4000"
+    guidelines: "精选3-5个最相关的同类项目案例，每个案例含项目名称、客户单位、合同金额、实施周期、主要成果。须提供合同复印件或中标通知书作为佐证，客户联系方式便于评审专家核实。"
+
+  - chapter: "第三部分 报价文件"
+    required: true
+    sections:
+      - "总报价表"
+      - "分项报价明细表"
+      - "人员费率表"
+      - "硬件设备报价表"
+    artifact_sources:
+      - "opportunity-brief.md"
+    word_count: "2000-3000"
+    guidelines: "报价文件须按招标文件要求的格式编制，总报价与分项报价之和一致。分项报价细化到模块级或人月级，硬件报价含品牌型号和配置参数。报价须在预算金额范围内，体现合理的利润空间。"
+
+compliance:
+  - "须逐条响应招标文件技术需求（提供需求响应表）"
+  - "核心人员简历须包含有效资质证书编号"
+  - "业绩案例须附合同复印件或中标通知书佐证"
+  - "报价须细化到模块/人月/设备级别，总价与分项一致"
+  - "偏离表须列明所有技术偏离和商务偏离事项"
+  - "投标文件格式须与招标文件要求完全一致"
+  - "联合体投标须提供联合体协议"
+
+style_rules:
+  numbering: "第X部分→一→（一）→1.→（1）"
+  paragraph_length: "200-400字"
+  tone: "formal-government"
+  required_elements:
+    - "mermaid总体架构图"
+    - "mermaid技术架构图"
+    - "需求响应表"
+    - "进度甘特图"
+    - "人员组织架构图"
+    - "报价明细表格"
+    - "项目业绩案例表"
+    - "偏离说明表"
+
+export:
+  page_size: A4
+  margins:
+    top: 2.54cm
+    bottom: 2.54cm
+    left: 3.17cm
+    right: 3.17cm
+  fonts:
+    title: { name: "方正小标宋简体", size: 26pt }
+    heading1: { name: "方正小标宋简体", size: 22pt }
+    heading2: { name: "黑体", size: 16pt }
+    heading3: { name: "楷体", size: 15pt }
+    body: { name: "仿宋", size: 14pt }
+    table: { name: "仿宋", size: 12pt }
+  line_spacing: 1.5
+  header: "投标文件"
+  footer: "page_number"
