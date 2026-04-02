@@ -1,6 +1,6 @@
 {
   "name": "studio-core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Studio workspace management — initialize studio/ in your project, track plugin development status, and promote approved plugins to production",
   "author": {
     "name": "VanLengs",

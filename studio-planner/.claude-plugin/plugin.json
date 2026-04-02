@@ -1,6 +1,6 @@
 {
   "name": "studio-planner",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Plugin planning suite — multi-role brainstorming, domain modeling, skill design, and spec generation. Use when starting a new plugin or restructuring an existing one.",
   "author": {
     "name": "VanLengs",
