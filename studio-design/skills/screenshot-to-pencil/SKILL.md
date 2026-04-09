@@ -24,7 +24,9 @@ Analyze a UI screenshot and generate a Pencil (.pen) prototype file that faithfu
    - Determine the next frame index for naming (e.g., "7. New Screen")
    - Avoid duplicate IDs
 
-4. **Load reference**: Read `references/pencil-format-spec.md` for the .pen format specification.
+4. **Load references**: 
+   - Read `references/pencil-format-spec.md` for the .pen format specification
+   - Read `references/tech-stack.md` for design token mappings and component conventions
 
 ## Analysis Steps
 

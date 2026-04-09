@@ -29,7 +29,9 @@ Read an OpenSpec change proposal and implement it as working React/Next.js code 
    - Read `tailwind.config.ts` or `tailwind.config.js` for theme configuration
    - Read `package.json` for dependencies (especially UI libraries)
 
-4. **Load reference**: Read `references/component-mapping.md` for .pen-to-code mappings
+4. **Load references**: 
+   - Read `references/component-mapping.md` for .pen-to-code mappings
+   - Read `references/tech-stack.md` for technology choices, coding conventions, and project structure
 
 5. **Load .pen file** (if referenced in proposal): If the proposal mentions a .pen file or if one exists at the standard location, read it for exact measurements, colors, and layout details.
 
